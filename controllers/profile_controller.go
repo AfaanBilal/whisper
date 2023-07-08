@@ -16,6 +16,7 @@ import (
 	"time"
 
 	"github.com/AfaanBilal/whisper/database"
+	"github.com/AfaanBilal/whisper/models"
 	"github.com/AfaanBilal/whisper/utils"
 	"github.com/gofiber/fiber/v2"
 )
@@ -48,9 +49,45 @@ func UpdateProfile(c *fiber.Ctx) error {
 }
 
 func GetFollowers(c *fiber.Ctx) error {
-	return c.JSON(fiber.Map{"status": "success"})
+	var follows []models.Follow
+
+	r := database.DB.Where("followed_id =?", utils.AuthId(c)).Find(&follows)
+	if r.Error != nil {
+		panic("Can't find followers")
+	}
+
+	var follower_ids []uint
+	for _, follow := range follows {
+		follower_ids = append(follower_ids, follow.FollowerUserId)
+	}
+
+	var followers []models.User
+	r = database.DB.Where("id IN ?", follower_ids).Find(&followers)
+	if r.Error != nil {
+		panic(r.Error)
+	}
+
+	return c.JSON(fiber.Map{"status": "success", "followers": followers})
 }
 
 func GetFollowing(c *fiber.Ctx) error {
-	return c.JSON(fiber.Map{"status": "success"})
+	var follows []models.Follow
+
+	r := database.DB.Where("follower_id =?", utils.AuthId(c)).Find(&follows)
+	if r.Error != nil {
+		panic("Can't find following")
+	}
+
+	var following_ids []uint
+	for _, follow := range follows {
+		following_ids = append(following_ids, follow.FollowedUserId)
+	}
+
+	var following []models.User
+	r = database.DB.Where("id IN ?", following_ids).Find(&following)
+	if r.Error != nil {
+		panic(r.Error)
+	}
+
+	return c.JSON(fiber.Map{"status": "success", "following": following})
 }
