@@ -28,9 +28,9 @@ type User struct {
 	Email    string `gorm:"uniqueIndex" json:"email"`
 	Password string `gorm:"type:varchar(255)" json:"-"`
 
-	Birthday *sql.NullTime   `json:"birthday"`
-	Bio      *sql.NullString `json:"bio"`
-	Link     *sql.NullString `json:"link"`
+	Birthday time.Time `json:"birthday"`
+	Bio      string    `json:"bio"`
+	Link     string    `json:"link"`
 
 	Role string `gorm:"type:varchar(50);default:user"`
 
