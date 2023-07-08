@@ -51,14 +51,58 @@ func CreatePost(c *fiber.Ctx) error {
 }
 
 func UpdatePost(c *fiber.Ctx) error {
-	return c.JSON(fiber.Map{"status": "success"})
+	postData := new(PostDTO)
+	if err := c.BodyParser(postData); err != nil {
+		return err
+	}
+
+	var post models.Post
+
+	result := database.DB.First(&post, "uuid = ?", c.Params("uuid"))
+	if result.RowsAffected == 0 {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "Post not found."})
+	}
+
+	if post.UserId != utils.AuthId(c) {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "Unauthorized."})
+	}
+
+	r := database.DB.Model(&post).Updates(postData)
+	if r.Error != nil {
+		panic(r.Error)
+	}
+
+	return c.JSON(fiber.Map{"status": "success", "post": post})
 }
 
 func GetPost(c *fiber.Ctx) error {
-	return c.JSON(fiber.Map{"status": "success"})
+	var post models.Post
+
+	result := database.DB.First(&post, "uuid = ?", c.Params("uuid"))
+	if result.RowsAffected == 0 {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "Post not found."})
+	}
+
+	return c.JSON(fiber.Map{"status": "success", "post": post})
 }
 
 func DeletePost(c *fiber.Ctx) error {
+	var post models.Post
+
+	result := database.DB.First(&post, "uuid = ?", c.Params("uuid"))
+	if result.RowsAffected == 0 {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "Post not found."})
+	}
+
+	if post.UserId != utils.AuthId(c) {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "Unauthorized."})
+	}
+
+	r := database.DB.Delete(&post)
+	if r.Error != nil {
+		panic(r.Error)
+	}
+
 	return c.JSON(fiber.Map{"status": "success"})
 }
 
