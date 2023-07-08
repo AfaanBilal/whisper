@@ -26,8 +26,8 @@ type Post struct {
 	UserId    uint
 	ReplyToId sql.NullInt64
 
-	text  string
-	media sql.NullString
+	Content string
+	Media   sql.NullString
 
 	Meta string
 
