@@ -17,9 +17,9 @@ import (
 )
 
 type Follow struct {
-	ID             uint `gorm:"primaryKey,autoIncrement"`
-	FollowedUserId uint
-	FollowerUserId uint
+	ID         uint `gorm:"primaryKey,autoIncrement"`
+	FollowedId uint
+	FollowerId uint
 
 	AcceptedAt time.Time
 

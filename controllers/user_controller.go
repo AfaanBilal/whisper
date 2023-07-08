@@ -68,7 +68,7 @@ func FollowUser(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Already followed."})
 	}
 
-	follow = models.Follow{FollowedUserId: user.ID, FollowerUserId: utils.AuthId(c)}
+	follow = models.Follow{FollowedId: user.ID, FollowerId: utils.AuthId(c)}
 	r := database.DB.Create(&follow)
 	if r.Error != nil {
 		panic(r.Error)

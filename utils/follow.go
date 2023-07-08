@@ -27,7 +27,7 @@ func UserFollowers(userId uint) []models.User {
 
 	var follower_ids []uint
 	for _, follow := range follows {
-		follower_ids = append(follower_ids, follow.FollowerUserId)
+		follower_ids = append(follower_ids, follow.FollowerId)
 	}
 
 	var followers []models.User
@@ -49,7 +49,7 @@ func UserFollowing(userId uint) []models.User {
 
 	var following_ids []uint
 	for _, follow := range follows {
-		following_ids = append(following_ids, follow.FollowedUserId)
+		following_ids = append(following_ids, follow.FollowedId)
 	}
 
 	var following []models.User
