@@ -21,25 +21,25 @@ import (
 )
 
 type User struct {
-	ID   uint      `gorm:"primaryKey,autoIncrement"`
-	UUID uuid.UUID `gorm:"type:varchar(60);"`
+	ID   uint      `gorm:"primaryKey,autoIncrement" json:"-"`
+	UUID uuid.UUID `gorm:"type:varchar(60);" json:"uuid"`
 
-	Name     string `gorm:"type:varchar(255)"`
-	Email    string `gorm:"uniqueIndex"`
-	Password string `gorm:"type:varchar(255)"`
+	Name     string `gorm:"type:varchar(255)" json:"name"`
+	Email    string `gorm:"uniqueIndex" json:"email"`
+	Password string `gorm:"type:varchar(255)" json:"-"`
 
-	Birthday time.Time
-	Bio      sql.NullString
-	Link     sql.NullString
+	Birthday *sql.NullTime   `json:"birthday"`
+	Bio      *sql.NullString `json:"bio"`
+	Link     *sql.NullString `json:"link"`
 
-	Role string `gorm:"type:varchar(255);default:user"`
+	Role string `gorm:"type:varchar(50);default:user"`
 
-	ActivatedAt sql.NullTime
-	VerifiedAt  sql.NullTime
-	Meta        string
+	ActivatedAt sql.NullTime `json:"-"`
+	VerifiedAt  sql.NullTime `json:"-"`
 
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	Meta      string    `json:"-"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 // Users struct

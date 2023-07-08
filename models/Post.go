@@ -21,18 +21,17 @@ import (
 )
 
 type Post struct {
-	ID        uint      `gorm:"primaryKey,autoIncrement"`
-	UUID      uuid.UUID `gorm:"type:varchar(60);"`
-	UserId    uint
-	ReplyToId sql.NullInt64
+	ID        uint          `gorm:"primaryKey,autoIncrement" json:"-"`
+	UUID      uuid.UUID     `gorm:"type:varchar(60);" json:"uuid"`
+	UserId    uint          `json:"-"`
+	ReplyToId sql.NullInt64 `json:"-"`
 
-	Content string
-	Media   sql.NullString
+	Content string          `json:"content"`
+	Media   *sql.NullString `json:"media"`
 
-	Meta string
-
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	Meta      *string   `json:"-"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 // Posts struct

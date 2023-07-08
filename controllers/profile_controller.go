@@ -12,10 +12,14 @@ A micro-blogging platform.
 
 package controllers
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/AfaanBilal/whisper/utils"
+	"github.com/gofiber/fiber/v2"
+)
 
 func GetProfile(c *fiber.Ctx) error {
-	return c.JSON(fiber.Map{"status": "success", "my_user_id": c.Locals("user_id")})
+	user := utils.AuthUser(c)
+	return c.JSON(fiber.Map{"status": "success", "profile": user})
 }
 
 func UpdateProfile(c *fiber.Ctx) error {
