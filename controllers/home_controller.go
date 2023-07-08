@@ -12,12 +12,31 @@ A micro-blogging platform.
 
 package controllers
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/AfaanBilal/whisper/database"
+	"github.com/AfaanBilal/whisper/models"
+	"github.com/AfaanBilal/whisper/utils"
+	"github.com/gofiber/fiber/v2"
+)
 
 func Home(c *fiber.Ctx) error {
-	return c.JSON(fiber.Map{"status": "success"})
+	var posts []models.Post
+
+	r := database.DB.Where("user_id IN (SELECT followed_id FROM follows WHERE follower_id = ?)", utils.AuthId(c)).Order("id DESC").Limit(30).Find(&posts)
+	if r.Error != nil {
+		panic(r.Error)
+	}
+
+	return c.JSON(fiber.Map{"status": "success", "posts": posts})
 }
 
 func Explore(c *fiber.Ctx) error {
+	var posts []models.Post
+
+	r := database.DB.Order("id DESC").Limit(30).Find(&posts)
+	if r.Error != nil {
+		panic(r.Error)
+	}
+
 	return c.JSON(fiber.Map{"status": "success"})
 }
