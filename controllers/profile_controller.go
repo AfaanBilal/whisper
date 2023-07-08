@@ -22,8 +22,13 @@ import (
 )
 
 func GetProfile(c *fiber.Ctx) error {
-	user := utils.AuthUser(c)
-	return c.JSON(fiber.Map{"status": "success", "profile": user})
+	var posts []models.Post
+	r := database.DB.Where("user_id = ?", utils.AuthId(c)).Limit(20).Find(&posts)
+	if r.Error != nil {
+		panic("Can't find posts")
+	}
+
+	return c.JSON(fiber.Map{"status": "success", "profile": utils.AuthUser(c), "posts": posts})
 }
 
 type ProfileDTO struct {
@@ -49,45 +54,9 @@ func UpdateProfile(c *fiber.Ctx) error {
 }
 
 func GetFollowers(c *fiber.Ctx) error {
-	var follows []models.Follow
-
-	r := database.DB.Where("followed_id =?", utils.AuthId(c)).Find(&follows)
-	if r.Error != nil {
-		panic("Can't find followers")
-	}
-
-	var follower_ids []uint
-	for _, follow := range follows {
-		follower_ids = append(follower_ids, follow.FollowerUserId)
-	}
-
-	var followers []models.User
-	r = database.DB.Where("id IN ?", follower_ids).Find(&followers)
-	if r.Error != nil {
-		panic(r.Error)
-	}
-
-	return c.JSON(fiber.Map{"status": "success", "followers": followers})
+	return c.JSON(fiber.Map{"status": "success", "followers": utils.UserFollowers(utils.AuthId(c))})
 }
 
 func GetFollowing(c *fiber.Ctx) error {
-	var follows []models.Follow
-
-	r := database.DB.Where("follower_id =?", utils.AuthId(c)).Find(&follows)
-	if r.Error != nil {
-		panic("Can't find following")
-	}
-
-	var following_ids []uint
-	for _, follow := range follows {
-		following_ids = append(following_ids, follow.FollowedUserId)
-	}
-
-	var following []models.User
-	r = database.DB.Where("id IN ?", following_ids).Find(&following)
-	if r.Error != nil {
-		panic(r.Error)
-	}
-
-	return c.JSON(fiber.Map{"status": "success", "following": following})
+	return c.JSON(fiber.Map{"status": "success", "following": utils.UserFollowing(utils.AuthId(c))})
 }

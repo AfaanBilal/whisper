@@ -52,6 +52,11 @@ func main() {
 	me.Get("/followers", controllers.GetFollowers)
 	me.Get("/following", controllers.GetFollowing)
 
+	users := app.Group("/users", middleware.AuthProtected())
+	users.Get("/:uuid", controllers.GetUserProfile)
+	users.Get("/:uuid/followers", controllers.GetUserFollowers)
+	users.Get("/:uuid/following", controllers.GetUserFollowing)
+
 	posts := app.Group("/posts", middleware.AuthProtected())
 	posts.Get("/", controllers.GetPosts)
 	posts.Post("/", controllers.CreatePost)
