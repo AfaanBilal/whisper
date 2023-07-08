@@ -17,11 +17,11 @@ import (
 )
 
 type Follow struct {
-	ID         uint `gorm:"primaryKey,autoIncrement"`
-	FollowedId uint
-	FollowerId uint
+	ID uint `gorm:"primaryKey,autoIncrement"`
 
-	AcceptedAt time.Time
+	FollowedId uint      `gorm:"index"`
+	FollowerId uint      `gorm:"index"`
+	AcceptedAt time.Time `gorm:"index"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time

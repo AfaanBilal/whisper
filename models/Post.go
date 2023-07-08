@@ -22,14 +22,14 @@ import (
 
 type Post struct {
 	ID        uint          `gorm:"primaryKey,autoIncrement" json:"-"`
-	UUID      uuid.UUID     `gorm:"type:varchar(60);" json:"uuid"`
-	UserId    uint          `json:"-"`
-	ReplyToId sql.NullInt64 `json:"-"`
+	UUID      uuid.UUID     `gorm:"type:varchar(60); uniqueIndex" json:"uuid"`
+	UserId    uint          `gorm:"index" json:"-"`
+	ReplyToId sql.NullInt64 `gorm:"index" json:"-"`
 
 	Content string `json:"content"`
 	Media   string `json:"media"`
 
-	Meta      *string   `json:"-"`
+	Meta      string    `json:"-"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }

@@ -20,12 +20,13 @@ import (
 )
 
 type Like struct {
-	ID     uint      `gorm:"primaryKey,autoIncrement" json:"-"`
-	UUID   uuid.UUID `gorm:"type:varchar(60);" json:"uuid"`
-	UserId uint      `json:"-"`
-	PostId uint      `json:"-"`
+	ID   uint      `gorm:"primaryKey,autoIncrement" json:"-"`
+	UUID uuid.UUID `gorm:"type:varchar(60); uniqueIndex" json:"uuid"`
 
-	Meta      *string   `json:"-"`
+	UserId uint `gorm:"index" json:"-"`
+	PostId uint `gorm:"index" json:"-"`
+
+	Meta      string    `json:"-"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
