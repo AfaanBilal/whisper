@@ -18,6 +18,7 @@ import (
 
 	"github.com/AfaanBilal/whisper/controllers"
 	"github.com/AfaanBilal/whisper/database"
+	"github.com/AfaanBilal/whisper/middleware"
 	"github.com/AfaanBilal/whisper/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -38,20 +39,20 @@ func main() {
 
 	app.Use(cors.New())
 
-	app.Get("/", controllers.Home)
-	app.Get("/explore", controllers.Explore)
+	app.Get("/", middleware.AuthProtected(), controllers.Home)
+	app.Get("/explore", middleware.AuthProtected(), controllers.Explore)
 
 	auth := app.Group("/auth")
 	auth.Post("/sign-up", controllers.SignUp)
 	auth.Post("/sign-in", controllers.SignIn)
 
-	me := app.Group("/me")
+	me := app.Group("/me", middleware.AuthProtected())
 	me.Get("/", controllers.GetProfile)
 	me.Put("/", controllers.UpdateProfile)
 	me.Get("/followers", controllers.GetFollowers)
 	me.Get("/following", controllers.GetFollowing)
 
-	posts := app.Group("/posts")
+	posts := app.Group("/posts", middleware.AuthProtected())
 	posts.Get("/", controllers.GetPosts)
 	posts.Post("/", controllers.CreatePost)
 	posts.Get("/:uuid", controllers.GetPost)
