@@ -29,7 +29,7 @@ func main() {
 	godotenv.Load()
 
 	database.Connect()
-	database.DB.AutoMigrate(&models.User{}, &models.AccessToken{}, &models.Post{}, &models.Like{})
+	database.DB.AutoMigrate(&models.User{}, &models.AccessToken{}, &models.Follow{}, &models.Post{}, &models.Like{})
 
 	app := fiber.New(fiber.Config{
 		ServerHeader:          "Whisper",
