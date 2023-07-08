@@ -17,7 +17,6 @@ import (
 	"github.com/AfaanBilal/whisper/models"
 	"github.com/AfaanBilal/whisper/utils"
 	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
 )
 
 type SignUpDTO struct {
@@ -50,14 +49,7 @@ func SignUp(c *fiber.Ctx) error {
 		panic(r.Error)
 	}
 
-	token := uuid.New().String()
-	accessToken := models.AccessToken{UserId: user.ID, Name: "login", Token: utils.HashMake(token)}
-	r = database.DB.Create(&accessToken)
-	if r.Error != nil {
-		panic(r.Error)
-	}
-
-	return c.JSON(fiber.Map{"status": "success", "access_token": token})
+	return utils.MakeAccessToken(c, &user)
 }
 
 func SignIn(c *fiber.Ctx) error {
@@ -77,12 +69,5 @@ func SignIn(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"status": "error", "message": "Invalid credentials."})
 	}
 
-	token := uuid.New().String()
-	accessToken := models.AccessToken{UserId: user.ID, Name: "login", Token: utils.HashMake(token)}
-	r := database.DB.Create(&accessToken)
-	if r.Error != nil {
-		panic(r.Error)
-	}
-
-	return c.JSON(fiber.Map{"status": "success", "access_token": token})
+	return utils.MakeAccessToken(c, &user)
 }
