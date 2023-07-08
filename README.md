@@ -4,7 +4,7 @@ Whisper
 Author: **[Afaan Bilal](https://afaan.dev)**
 
 ## Introduction
-**Whisper** is a micro-blogging platform written in Go.
+**Whisper** is a micro-blogging platform written in Go, React Native and TypeScript.
 
 ---
 
