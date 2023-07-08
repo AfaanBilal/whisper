@@ -28,3 +28,7 @@ func AuthUser(c *fiber.Ctx) models.User {
 
 	return user
 }
+
+func AuthId(c *fiber.Ctx) uint {
+	return c.Locals("user_id").(uint)
+}

@@ -34,11 +34,6 @@ type Post struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-// Posts struct
-type Posts struct {
-	Posts []Post `json:"posts"`
-}
-
 func (post *Post) BeforeCreate(tx *gorm.DB) (err error) {
 	post.UUID = uuid.New()
 	return

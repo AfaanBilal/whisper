@@ -12,10 +12,22 @@ A micro-blogging platform.
 
 package controllers
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/AfaanBilal/whisper/database"
+	"github.com/AfaanBilal/whisper/models"
+	"github.com/AfaanBilal/whisper/utils"
+	"github.com/gofiber/fiber/v2"
+)
 
 func GetPosts(c *fiber.Ctx) error {
-	return c.JSON(fiber.Map{"status": "success"})
+	var posts []models.Post
+
+	r := database.DB.Where("user_id =?", utils.AuthId(c)).Find(&posts)
+	if r.Error != nil {
+		panic("Can't find posts")
+	}
+
+	return c.JSON(fiber.Map{"status": "success", "posts": posts})
 }
 
 func CreatePost(c *fiber.Ctx) error {
