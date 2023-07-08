@@ -58,10 +58,9 @@ func main() {
 	posts.Get("/:uuid", controllers.GetPost)
 	posts.Put("/:uuid", controllers.UpdatePost)
 	posts.Delete("/:uuid", controllers.DeletePost)
-	posts.Get("/:uuid/likes", controllers.LikePost)
+	posts.Get("/:uuid/likes", controllers.GetLikes)
 	posts.Post("/:uuid/likes", controllers.LikePost)
 	posts.Delete("/:uuid/likes", controllers.UnlikePost)
-	posts.Post("/:uuid/reply", controllers.ReplyPost)
 
 	fmt.Println(fmt.Sprintf("[whisper %s] Starting on port %s.", os.Getenv("VERSION"), os.Getenv("PORT")))
 	app.Listen(fmt.Sprintf(":%s", os.Getenv("PORT")))

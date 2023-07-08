@@ -106,14 +106,64 @@ func DeletePost(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"status": "success"})
 }
 
+func GetLikes(c *fiber.Ctx) error {
+	var post models.Post
+
+	result := database.DB.First(&post, "uuid = ?", c.Params("uuid"))
+	if result.RowsAffected == 0 {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "Post not found."})
+	}
+
+	var likes []models.Like
+	r := database.DB.Where("post_id =?", post.ID).Find(&likes)
+	if r.Error != nil {
+		panic("Can't find likes")
+	}
+
+	return c.JSON(fiber.Map{"status": "success", "likes": likes})
+}
+
 func LikePost(c *fiber.Ctx) error {
+	var post models.Post
+
+	result := database.DB.First(&post, "uuid = ?", c.Params("uuid"))
+	if result.RowsAffected == 0 {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "Post not found."})
+	}
+
+	var like models.Like
+	result = database.DB.First(&like, "user_id = ? AND post_id = ?", utils.AuthId(c), post.ID)
+	if result.RowsAffected > 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Already liked."})
+	}
+
+	like = models.Like{UserId: utils.AuthId(c), PostId: post.ID}
+	r := database.DB.Create(&like)
+	if r.Error != nil {
+		panic(r.Error)
+	}
+
 	return c.JSON(fiber.Map{"status": "success"})
 }
 
 func UnlikePost(c *fiber.Ctx) error {
-	return c.JSON(fiber.Map{"status": "success"})
-}
+	var post models.Post
 
-func ReplyPost(c *fiber.Ctx) error {
+	result := database.DB.First(&post, "uuid = ?", c.Params("uuid"))
+	if result.RowsAffected == 0 {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "Post not found."})
+	}
+
+	var like models.Like
+	result = database.DB.First(&like, "user_id = ? AND post_id = ?", utils.AuthId(c), post.ID)
+	if result.RowsAffected == 0 {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "Like not found."})
+	}
+
+	r := database.DB.Delete(&like)
+	if r.Error != nil {
+		panic(r.Error)
+	}
+
 	return c.JSON(fiber.Map{"status": "success"})
 }
