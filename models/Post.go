@@ -26,8 +26,8 @@ type Post struct {
 	UserId    uint          `json:"-"`
 	ReplyToId sql.NullInt64 `json:"-"`
 
-	Content string          `json:"content"`
-	Media   *sql.NullString `json:"media"`
+	Content string `json:"content"`
+	Media   string `json:"media"`
 
 	Meta      *string   `json:"-"`
 	CreatedAt time.Time `json:"created_at"`

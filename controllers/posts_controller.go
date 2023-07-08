@@ -30,8 +30,24 @@ func GetPosts(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"status": "success", "posts": posts})
 }
 
+type PostDTO struct {
+	Content string `json:"content"`
+	Media   string `json:"media"`
+}
+
 func CreatePost(c *fiber.Ctx) error {
-	return c.JSON(fiber.Map{"status": "success"})
+	postData := new(PostDTO)
+	if err := c.BodyParser(postData); err != nil {
+		return err
+	}
+
+	post := models.Post{UserId: utils.AuthId(c), Content: postData.Content, Media: postData.Media}
+	r := database.DB.Create(&post)
+	if r.Error != nil {
+		panic(r.Error)
+	}
+
+	return c.JSON(fiber.Map{"status": "success", "post": post})
 }
 
 func UpdatePost(c *fiber.Ctx) error {
