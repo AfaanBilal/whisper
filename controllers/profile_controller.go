@@ -32,12 +32,12 @@ func GetProfile(c *fiber.Ctx) error {
 }
 
 type ProfileDTO struct {
-	Name      string    `json:"name"`
-	Birthday  time.Time `json:"birthday"`
-	Bio       string    `json:"bio"`
-	Link      string    `json:"link"`
-	Image     string    `json:"image"`
-	IsPrivate bool      `json:"is_private"`
+	Name      string    `json:"name" validate:"required"`
+	Birthday  time.Time `json:"birthday" validate:"required"`
+	Bio       string    `json:"bio" validate:"required"`
+	Link      string    `json:"link" validate:"required"`
+	Image     string    `json:"image" validate:"required"`
+	IsPrivate *bool     `json:"is_private" validate:"required"`
 }
 
 func UpdateProfile(c *fiber.Ctx) error {
