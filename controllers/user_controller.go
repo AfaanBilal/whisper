@@ -28,7 +28,7 @@ func GetUserProfile(c *fiber.Ctx) error {
 	}
 
 	var posts []models.Post
-	r := database.DB.Where("user_id = ?", user.ID).Limit(20).Find(&posts)
+	r := database.DB.Where("user_id = ?", user.ID).Order("id DESC").Limit(20).Find(&posts)
 	if r.Error != nil {
 		panic("Can't find posts")
 	}
