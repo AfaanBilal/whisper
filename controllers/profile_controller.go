@@ -60,3 +60,14 @@ func GetFollowers(c *fiber.Ctx) error {
 func GetFollowing(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"status": "success", "following": utils.UserFollowing(utils.AuthId(c))})
 }
+
+func GetNotifications(c *fiber.Ctx) error {
+	var notifications []models.Notification
+
+	r := database.DB.Where("user_id  = ?", utils.AuthId(c)).Find(&notifications)
+	if r.Error != nil {
+		panic("Can't find notifications")
+	}
+
+	return c.JSON(fiber.Map{"status": "success", "notifications": notifications})
+}

@@ -52,6 +52,7 @@ func main() {
 	me.Put("/", controllers.UpdateProfile)
 	me.Get("/followers", controllers.GetFollowers)
 	me.Get("/following", controllers.GetFollowing)
+	me.Get("/notifications", controllers.GetNotifications)
 
 	users := app.Group("/users", middleware.AuthProtected())
 	users.Get("/:uuid", controllers.GetUserProfile)
