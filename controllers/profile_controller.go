@@ -31,10 +31,12 @@ func GetProfile(c *fiber.Ctx) error {
 }
 
 type ProfileDTO struct {
-	Name     string    `json:"name"`
-	Birthday time.Time `json:"birthday"`
-	Bio      string    `json:"bio"`
-	Link     string    `json:"link"`
+	Name      string    `json:"name"`
+	Birthday  time.Time `json:"birthday"`
+	Bio       string    `json:"bio"`
+	Link      string    `json:"link"`
+	Image     string    `json:"image"`
+	IsPrivate bool      `json:"is_private"`
 }
 
 func UpdateProfile(c *fiber.Ctx) error {
@@ -49,7 +51,7 @@ func UpdateProfile(c *fiber.Ctx) error {
 		panic(r.Error)
 	}
 
-	return c.JSON(fiber.Map{"status": "success", "profile": user})
+	return c.JSON(fiber.Map{"status": "success", "profile": utils.AuthUser(c)})
 }
 
 func GetFollowers(c *fiber.Ctx) error {
