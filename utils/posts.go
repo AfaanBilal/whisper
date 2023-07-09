@@ -13,8 +13,11 @@ A micro-blogging platform.
 package utils
 
 import (
+	"time"
+
 	"github.com/AfaanBilal/whisper/database"
 	"github.com/AfaanBilal/whisper/models"
+	"github.com/gofiber/fiber/v2"
 )
 
 func UserPosts(userId uint) []models.Post {
@@ -72,4 +75,59 @@ func HasLiked(userId uint, postId uint, likes []models.Like) bool {
 	}
 
 	return false
+}
+
+type AuthorResource struct {
+	Name     string `json:"name"`
+	Username string `json:"username"`
+	Image    string `json:"image"`
+}
+
+type PostResource struct {
+	UUID      string         `json:"uuid"`
+	Author    AuthorResource `json:"author"`
+	Content   string         `json:"content"`
+	Media     string         `json:"media"`
+	CreatedAt time.Time      `json:"created_at"`
+	Likes     uint           `json:"likes"`
+	Liked     bool           `json:"liked"`
+}
+
+func MakePostsResponse(c *fiber.Ctx, posts []models.Post) error {
+	var post_ids []uint
+	var user_ids []uint
+	for _, post := range posts {
+		user_ids = append(user_ids, post.UserId)
+		post_ids = append(post_ids, post.ID)
+	}
+
+	var authors []models.User
+	r := database.DB.Where("id IN ?", user_ids).Limit(30).Find(&authors)
+	if r.Error != nil {
+		panic(r.Error)
+	}
+
+	allLikes := LikeCounts(post_ids)
+	likedPosts := LikedPosts(AuthId(c), post_ids)
+
+	var ps []PostResource
+	for _, post := range posts {
+		author := FindUser(authors, post.UserId)
+
+		ps = append(ps, PostResource{
+			UUID: post.UUID.String(),
+			Author: AuthorResource{
+				Name:     author.Name,
+				Username: author.Username,
+				Image:    author.Image,
+			},
+			Content:   post.Content,
+			Media:     post.Media,
+			CreatedAt: post.CreatedAt,
+			Likes:     uint(allLikes[post.ID]),
+			Liked:     HasLiked(AuthId(c), post.ID, likedPosts),
+		})
+	}
+
+	return c.JSON(fiber.Map{"status": "success", "posts": ps})
 }
