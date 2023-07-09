@@ -91,20 +91,20 @@ func HasLiked(userId uint, postId uint, likes []models.Like) bool {
 	return false
 }
 
-type AuthorResource struct {
+type UserResource struct {
 	Name     string `json:"name"`
 	Username string `json:"username"`
 	Image    string `json:"image"`
 }
 
 type PostResource struct {
-	UUID      string         `json:"uuid"`
-	Author    AuthorResource `json:"author"`
-	Content   string         `json:"content"`
-	Media     string         `json:"media"`
-	CreatedAt time.Time      `json:"created_at"`
-	Likes     uint           `json:"likes"`
-	Liked     bool           `json:"liked"`
+	UUID      string       `json:"uuid"`
+	Author    UserResource `json:"author"`
+	Content   string       `json:"content"`
+	Media     string       `json:"media"`
+	CreatedAt time.Time    `json:"created_at"`
+	Likes     uint         `json:"likes"`
+	Liked     bool         `json:"liked"`
 }
 
 func ProcessPostsResponse(c *fiber.Ctx, posts []models.Post) []PostResource {
@@ -130,7 +130,7 @@ func ProcessPostsResponse(c *fiber.Ctx, posts []models.Post) []PostResource {
 
 		ps = append(ps, PostResource{
 			UUID: post.UUID.String(),
-			Author: AuthorResource{
+			Author: UserResource{
 				Name:     author.Name,
 				Username: author.Username,
 				Image:    author.Image,

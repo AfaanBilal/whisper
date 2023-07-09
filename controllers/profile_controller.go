@@ -76,5 +76,5 @@ func GetNotifications(c *fiber.Ctx) error {
 		panic("Can't find notifications")
 	}
 
-	return c.JSON(fiber.Map{"status": "success", "notifications": notifications})
+	return c.JSON(fiber.Map{"status": "success", "notifications": utils.ProcessNotificationResponse(c, notifications)})
 }
