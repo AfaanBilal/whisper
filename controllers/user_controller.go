@@ -33,7 +33,7 @@ func GetUserProfile(c *fiber.Ctx) error {
 	followerCount := utils.FollowerCount(user.ID)
 	followingCount := utils.FollowerCount(user.ID)
 
-	if followed {
+	if !user.IsPrivate || followed {
 		posts := utils.ProcessPostsResponse(c, utils.UserPosts(user.ID))
 
 		return c.JSON(fiber.Map{
