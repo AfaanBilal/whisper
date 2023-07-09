@@ -88,3 +88,9 @@ func IsFollower(userId uint, by uint) bool {
 	result := database.DB.First(&follow, "followed_id = ? AND follower_id = ?", by, userId)
 	return result.RowsAffected > 0 && follow.AcceptedAt != time.Unix(0, 0)
 }
+
+func IsFollowRequested(userId uint, by uint) bool {
+	var follow models.Follow
+	result := database.DB.First(&follow, "followed_id = ? AND follower_id = ?", userId, by)
+	return result.RowsAffected > 0 && follow.AcceptedAt == time.Unix(0, 0)
+}

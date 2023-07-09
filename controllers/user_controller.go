@@ -29,6 +29,9 @@ func GetUserProfile(c *fiber.Ctx) error {
 
 	followed := utils.IsFollowed(user.ID, utils.AuthId(c))
 	follower := utils.IsFollower(user.ID, utils.AuthId(c))
+
+	requested := utils.IsFollowRequested(user.ID, utils.AuthId(c))
+
 	postCount := utils.PostCount(user.ID)
 	followerCount := utils.FollowerCount(user.ID)
 	followingCount := utils.FollowerCount(user.ID)
@@ -56,6 +59,7 @@ func GetUserProfile(c *fiber.Ctx) error {
 				Image:     user.Image,
 				IsPrivate: user.IsPrivate,
 			},
+			"requested":       requested,
 			"followed":        followed,
 			"follower":        follower,
 			"post_count":      postCount,

@@ -13,11 +13,14 @@ A micro-blogging platform.
 package utils
 
 import (
+	"fmt"
+
 	"github.com/go-playground/validator/v10"
 )
 
 func ValidatorErrors(err error) string {
 	for _, err := range err.(validator.ValidationErrors) {
+		fmt.Printf("%s", err.Error())
 		return err.Field() + " is invalid."
 	}
 
