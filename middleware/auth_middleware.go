@@ -33,6 +33,11 @@ func AuthProtected() func(*fiber.Ctx) error {
 
 func authValidator(c *fiber.Ctx, key string) (bool, error) {
 	keyParts := strings.Split(key, "|")
+
+	if len(keyParts) < 2 {
+		return false, keyauth.ErrMissingOrMalformedAPIKey
+	}
+
 	accessTokenId := keyParts[0]
 	accessTokenValue := keyParts[1]
 

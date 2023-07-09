@@ -43,7 +43,7 @@ func SignUp(c *fiber.Ctx) error {
 	result := database.DB.First(&u, "email = ?", signUp.Email)
 
 	if result.RowsAffected > 0 {
-		return c.JSON(fiber.Map{"status": "error", "message": "An account exists with this email."})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "An account exists with this email."})
 	}
 
 	user := models.User{Email: signUp.Email, Password: utils.HashMake(signUp.Password), Name: signUp.Name, Birthday: signUp.Birthday}
@@ -65,11 +65,11 @@ func SignIn(c *fiber.Ctx) error {
 	result := database.DB.First(&user, "email = ?", signIn.Email)
 
 	if result.RowsAffected == 0 {
-		return c.JSON(fiber.Map{"status": "error", "message": "Invalid credentials."})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Invalid credentials."})
 	}
 
 	if !utils.HashCheck(signIn.Password, user.Password) {
-		return c.JSON(fiber.Map{"status": "error", "message": "Invalid credentials."})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Invalid credentials."})
 	}
 
 	return utils.MakeAccessToken(c, &user)
@@ -80,7 +80,7 @@ func SignOut(c *fiber.Ctx) error {
 
 	r := database.DB.First(&accessToken, "id = ?", c.Locals("token_id"))
 	if r.RowsAffected == 0 {
-		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "Token not found."})
+		return c.Status(fiber.StatusBadRequest).Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "Token not found."})
 	}
 
 	r = database.DB.Delete(&accessToken)
