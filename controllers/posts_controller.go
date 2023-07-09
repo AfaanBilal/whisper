@@ -16,6 +16,7 @@ import (
 	"github.com/AfaanBilal/whisper/database"
 	"github.com/AfaanBilal/whisper/models"
 	"github.com/AfaanBilal/whisper/utils"
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -41,6 +42,11 @@ func CreatePost(c *fiber.Ctx) error {
 		return err
 	}
 
+	validate := validator.New()
+	if err := validate.Struct(postData); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": utils.ValidatorErrors(err)})
+	}
+
 	post := models.Post{UserId: utils.AuthId(c), Content: postData.Content, Media: postData.Media}
 	r := database.DB.Create(&post)
 	if r.Error != nil {
@@ -54,6 +60,11 @@ func UpdatePost(c *fiber.Ctx) error {
 	postData := new(PostDTO)
 	if err := c.BodyParser(postData); err != nil {
 		return err
+	}
+
+	validate := validator.New()
+	if err := validate.Struct(postData); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": utils.ValidatorErrors(err)})
 	}
 
 	var post models.Post

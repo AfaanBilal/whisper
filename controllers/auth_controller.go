@@ -18,6 +18,7 @@ import (
 	"github.com/AfaanBilal/whisper/database"
 	"github.com/AfaanBilal/whisper/models"
 	"github.com/AfaanBilal/whisper/utils"
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -38,6 +39,11 @@ func SignUp(c *fiber.Ctx) error {
 	signUp := new(SignUpDTO)
 	if err := c.BodyParser(signUp); err != nil {
 		return err
+	}
+
+	validate := validator.New()
+	if err := validate.Struct(signUp); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": utils.ValidatorErrors(err)})
 	}
 
 	var u models.User
@@ -65,6 +71,11 @@ func SignIn(c *fiber.Ctx) error {
 	signIn := new(SignInDTO)
 	if err := c.BodyParser(signIn); err != nil {
 		return err
+	}
+
+	validate := validator.New()
+	if err := validate.Struct(signIn); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": utils.ValidatorErrors(err)})
 	}
 
 	var user models.User
