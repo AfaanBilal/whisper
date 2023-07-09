@@ -21,6 +21,7 @@ import (
 )
 
 type NotificationResource struct {
+	ID        uint         `json:"id"`
 	User      UserResource `json:"user"`
 	FollowId  uint         `json:"follow_id"`
 	Type      string       `json:"content"`
@@ -65,6 +66,7 @@ func ProcessNotificationResponse(c *fiber.Ctx, notifications []models.Notificati
 		user := FindUser(users, n.UserId)
 
 		ns = append(ns, NotificationResource{
+			ID: n.ID,
 			User: UserResource{
 				Name:     user.Name,
 				Username: user.Username,
