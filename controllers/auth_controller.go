@@ -25,6 +25,7 @@ type SignUpDTO struct {
 	Email    string    `json:"email" validate:"required,email,lte=255"`
 	Password string    `json:"password" validate:"required,gte=8,lte=255"`
 	Name     string    `json:"name" validate:"required,lte=255"`
+	Username string    `json:"username" validate:"required,lte=255"`
 	Birthday time.Time `json:"birthday" validate:"required"`
 }
 
@@ -40,13 +41,18 @@ func SignUp(c *fiber.Ctx) error {
 	}
 
 	var u models.User
-	result := database.DB.First(&u, "email = ?", signUp.Email)
 
+	result := database.DB.First(&u, "username = ?", signUp.Username)
+	if result.RowsAffected > 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Username unavailable."})
+	}
+
+	result = database.DB.First(&u, "email = ?", signUp.Email)
 	if result.RowsAffected > 0 {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "An account exists with this email."})
 	}
 
-	user := models.User{Email: signUp.Email, Password: utils.HashMake(signUp.Password), Name: signUp.Name, Birthday: signUp.Birthday}
+	user := models.User{Email: signUp.Email, Password: utils.HashMake(signUp.Password), Name: signUp.Name, Username: signUp.Username, Birthday: signUp.Birthday}
 	r := database.DB.Create(&user)
 	if r.Error != nil {
 		panic(r.Error)
