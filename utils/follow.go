@@ -60,3 +60,17 @@ func UserFollowing(userId uint) []models.User {
 
 	return following
 }
+
+func FollowerCount(userId uint) int64 {
+	var follow models.Follow
+	var count int64
+	database.DB.Where("followed_id = ?", userId).Model(&follow).Count(&count)
+	return count
+}
+
+func FollowingCount(userId uint) int64 {
+	var follow models.Follow
+	var count int64
+	database.DB.Where("follower_id = ?", userId).Model(&follow).Count(&count)
+	return count
+}

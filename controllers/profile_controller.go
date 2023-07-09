@@ -28,7 +28,10 @@ func GetProfile(c *fiber.Ctx) error {
 		panic("Can't find posts")
 	}
 
-	return c.JSON(fiber.Map{"status": "success", "profile": utils.AuthUser(c), "posts": posts})
+	followerCount := utils.FollowerCount(utils.AuthId(c))
+	followingCount := utils.FollowerCount(utils.AuthId(c))
+
+	return c.JSON(fiber.Map{"status": "success", "profile": utils.AuthUser(c), "posts": posts, "follower_count": followerCount, "following_count": followingCount})
 }
 
 type ProfileDTO struct {
