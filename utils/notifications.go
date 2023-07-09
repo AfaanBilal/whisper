@@ -68,10 +68,11 @@ func ProcessNotificationResponse(c *fiber.Ctx, notifications []models.Notificati
 		ns = append(ns, NotificationResource{
 			ID: n.ID,
 			User: UserResource{
-				UUID:     user.UUID.String(),
-				Name:     user.Name,
-				Username: user.Username,
-				Image:    user.Image,
+				UUID:      user.UUID.String(),
+				Name:      user.Name,
+				Username:  user.Username,
+				Image:     user.Image,
+				IsPrivate: user.IsPrivate,
 			},
 			FollowId:  FindFollowId(follows, n.TargetFollowId),
 			Type:      n.Type,

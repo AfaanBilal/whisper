@@ -92,10 +92,11 @@ func HasLiked(userId uint, postId uint, likes []models.Like) bool {
 }
 
 type UserResource struct {
-	UUID     string `json:"uuid"`
-	Name     string `json:"name"`
-	Username string `json:"username"`
-	Image    string `json:"image"`
+	UUID      string `json:"uuid"`
+	Name      string `json:"name"`
+	Username  string `json:"username"`
+	Image     string `json:"image"`
+	IsPrivate bool   `json:"is_private"`
 }
 
 type PostResource struct {
@@ -132,10 +133,11 @@ func ProcessPostsResponse(c *fiber.Ctx, posts []models.Post) []PostResource {
 		ps = append(ps, PostResource{
 			UUID: post.UUID.String(),
 			Author: UserResource{
-				UUID:     author.UUID.String(),
-				Name:     author.Name,
-				Username: author.Username,
-				Image:    author.Image,
+				UUID:      author.UUID.String(),
+				Name:      author.Name,
+				Username:  author.Username,
+				Image:     author.Image,
+				IsPrivate: author.IsPrivate,
 			},
 			Content:   post.Content,
 			Media:     post.Media,
