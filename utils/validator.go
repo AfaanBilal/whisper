@@ -16,12 +16,10 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-func ValidatorErrors(err error) map[string]string {
-	fields := map[string]string{}
-
+func ValidatorErrors(err error) string {
 	for _, err := range err.(validator.ValidationErrors) {
-		fields[err.Field()] = err.Error()
+		return err.Field() + " is invalid."
 	}
 
-	return fields
+	return ""
 }
