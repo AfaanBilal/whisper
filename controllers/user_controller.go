@@ -27,19 +27,37 @@ func GetUserProfile(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "User not found."})
 	}
 
-	var follow models.Follow
-	result := database.DB.First(&follow, "followed_id = ? AND follower_id = ?", user.ID, utils.AuthId(c))
-	followed := result.RowsAffected > 0 && follow.AcceptedAt != time.Unix(0, 0)
+	followed := utils.IsFollowed(user.ID, utils.AuthId(c))
+	postCount := utils.PostCount(user.ID)
+	followerCount := utils.FollowerCount(user.ID)
+	followingCount := utils.FollowerCount(user.ID)
 
-	var posts []models.Post
 	if followed {
-		r := database.DB.Where("user_id = ?", user.ID).Order("id DESC").Limit(20).Find(&posts)
-		if r.Error != nil {
-			panic("Can't find posts")
-		}
-	}
+		posts := utils.ProcessPostsResponse(c, utils.UserPosts(user.ID))
 
-	return c.JSON(fiber.Map{"status": "success", "profile": user, "posts": posts, "followed": followed})
+		return c.JSON(fiber.Map{
+			"status":          "success",
+			"profile":         user,
+			"followed":        followed,
+			"posts":           posts,
+			"post_count":      postCount,
+			"follower_count":  followerCount,
+			"following_count": followingCount,
+		})
+	} else {
+		return c.JSON(fiber.Map{
+			"status": "success",
+			"profile": utils.UserResource{
+				Name:     user.Name,
+				Username: user.Username,
+				Image:    user.Image,
+			},
+			"followed":        followed,
+			"post_count":      postCount,
+			"follower_count":  followerCount,
+			"following_count": followingCount,
+		})
+	}
 }
 
 func GetUserFollowers(c *fiber.Ctx) error {

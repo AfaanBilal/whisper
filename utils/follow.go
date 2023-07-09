@@ -13,6 +13,8 @@ A micro-blogging platform.
 package utils
 
 import (
+	"time"
+
 	"github.com/AfaanBilal/whisper/database"
 	"github.com/AfaanBilal/whisper/models"
 )
@@ -73,4 +75,10 @@ func FollowingCount(userId uint) int64 {
 	var count int64
 	database.DB.Where("follower_id = ?", userId).Model(&follow).Count(&count)
 	return count
+}
+
+func IsFollowed(userId uint, by uint) bool {
+	var follow models.Follow
+	result := database.DB.First(&follow, "followed_id = ? AND follower_id = ?", userId, by)
+	return result.RowsAffected > 0 && follow.AcceptedAt != time.Unix(0, 0)
 }
