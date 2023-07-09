@@ -46,7 +46,7 @@ func UpdateProfile(c *fiber.Ctx) error {
 	}
 
 	user := utils.AuthUser(c)
-	r := database.DB.Model(&user).Updates(profileData)
+	r := database.DB.Model(&user).Select("*").Updates(profileData)
 	if r.Error != nil {
 		panic(r.Error)
 	}
