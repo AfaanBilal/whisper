@@ -22,7 +22,7 @@ import (
 
 func UserPosts(userId uint) []models.Post {
 	var posts []models.Post
-	r := database.DB.Where("user_id = ?", userId).Limit(20).Find(&posts)
+	r := database.DB.Where("user_id = ?", userId).Order("id DESC").Limit(20).Find(&posts)
 	if r.Error != nil {
 		panic("Can't find posts")
 	}
