@@ -76,6 +76,8 @@ func FollowUser(c *fiber.Ctx) error {
 		panic(r.Error)
 	}
 
+	database.DB.Create(&models.Notification{UserId: user.ID, TargetUserId: utils.AuthId(c), Type: "follow", Message: "followed you."})
+
 	followers := utils.UserFollowers(user.ID)
 
 	return c.JSON(fiber.Map{"status": "success", "followers": followers})
@@ -119,6 +121,8 @@ func AcceptFollower(c *fiber.Ctx) error {
 	if r.Error != nil {
 		panic(r.Error)
 	}
+
+	database.DB.Create(&models.Notification{UserId: user.ID, TargetUserId: utils.AuthId(c), Type: "follow-accept", Message: "accepted your follow request."})
 
 	return c.JSON(fiber.Map{"status": "success"})
 }

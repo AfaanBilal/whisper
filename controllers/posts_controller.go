@@ -154,6 +154,8 @@ func LikePost(c *fiber.Ctx) error {
 		panic(r.Error)
 	}
 
+	database.DB.Create(&models.Notification{UserId: post.UserId, TargetUserId: utils.AuthId(c), Type: "like", Message: "liked your post."})
+
 	return c.JSON(fiber.Map{"status": "success"})
 }
 
