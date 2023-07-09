@@ -50,6 +50,7 @@ func GetUserProfile(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{
 			"status": "success",
 			"profile": utils.UserResource{
+				UUID:     user.UUID.String(),
 				Name:     user.Name,
 				Username: user.Username,
 				Image:    user.Image,
