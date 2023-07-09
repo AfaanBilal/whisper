@@ -114,7 +114,14 @@ func FollowUser(c *fiber.Ctx) error {
 		panic(r.Error)
 	}
 
-	database.DB.Create(&models.Notification{UserId: user.ID, TargetUserId: utils.AuthId(c), Type: "follow", Message: "followed you."})
+	Type := "follow"
+	Message := "followed you."
+	if user.IsPrivate {
+		Type = "follow-requested"
+		Message = "requested to follow you."
+	}
+
+	database.DB.Create(&models.Notification{UserId: user.ID, TargetUserId: utils.AuthId(c), Type: Type, Message: Message})
 
 	followers := utils.UserFollowers(user.ID)
 
@@ -161,6 +168,26 @@ func AcceptFollower(c *fiber.Ctx) error {
 	}
 
 	database.DB.Create(&models.Notification{UserId: user.ID, TargetUserId: utils.AuthId(c), Type: "follow-accept", Message: "accepted your follow request."})
+
+	return c.JSON(fiber.Map{"status": "success"})
+}
+
+func RejectFollower(c *fiber.Ctx) error {
+	user, err := models.GetUser(c.Params("uuid"))
+	if err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "User not found."})
+	}
+
+	var follow models.Follow
+	result := database.DB.First(&follow, "follower_id = ? AND followed_id = ?", user.ID, utils.AuthId(c))
+	if result.RowsAffected == 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Follower not found."})
+	}
+
+	r := database.DB.Delete(&follow)
+	if r.Error != nil {
+		panic(r.Error)
+	}
 
 	return c.JSON(fiber.Map{"status": "success"})
 }
