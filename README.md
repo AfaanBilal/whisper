@@ -19,6 +19,13 @@ Author: **[Afaan Bilal](https://afaan.dev)**
 
 ---
 
+## Run with Docker
+```bash
+docker run --env DB_DSN="root:@tcp(host.docker.internal:3306)/whisper?charset=utf8mb4&parseTime=True&loc=Local" --env PORT=8080 --env VERSION=0.1.0 -p 8080:8080 afaanbilal/whisper
+```
+
+This will start the server on port 8080.
+
 ## Contributing
 All contributions are welcome. Please create an issue first for any feature request
 or bug. Then fork the repository, create a branch and make any changes to fix the bug
