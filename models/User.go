@@ -35,7 +35,8 @@ type User struct {
 	Bio      string    `json:"bio"`
 	Link     string    `json:"link"`
 
-	Role string `gorm:"type:varchar(50); default:user"`
+	IsPrivate bool   `gorm:"index" json:"is_private"`
+	Role      string `gorm:"type:varchar(50); default:user"`
 
 	ActivatedAt sql.NullTime `json:"-"`
 	VerifiedAt  sql.NullTime `json:"-"`
