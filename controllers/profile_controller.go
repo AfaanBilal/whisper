@@ -51,7 +51,7 @@ func UpdateProfile(c *fiber.Ctx) error {
 		panic(r.Error)
 	}
 
-	return c.JSON(fiber.Map{"status": "success", "profile": utils.AuthUser(c)})
+	return c.JSON(fiber.Map{"status": "success", "profile": user})
 }
 
 func GetFollowers(c *fiber.Ctx) error {
