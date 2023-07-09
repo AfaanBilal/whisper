@@ -13,6 +13,8 @@ A micro-blogging platform.
 package controllers
 
 import (
+	"time"
+
 	"github.com/AfaanBilal/whisper/database"
 	"github.com/AfaanBilal/whisper/models"
 	"github.com/AfaanBilal/whisper/utils"
@@ -99,4 +101,44 @@ func UnfollowUser(c *fiber.Ctx) error {
 	followers := utils.UserFollowers(user.ID)
 
 	return c.JSON(fiber.Map{"status": "success", "followers": followers})
+}
+
+func AcceptFollower(c *fiber.Ctx) error {
+	user, err := models.GetUser(c.Params("uuid"))
+	if err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "User not found."})
+	}
+
+	var follow models.Follow
+	result := database.DB.First(&follow, "follower_id = ? AND followed_id = ?", user.ID, utils.AuthId(c))
+	if result.RowsAffected == 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Follower not found."})
+	}
+
+	r := database.DB.Model(&follow).Update(follow.AcceptedAt.String(), time.Now())
+	if r.Error != nil {
+		panic(r.Error)
+	}
+
+	return c.JSON(fiber.Map{"status": "success"})
+}
+
+func RemoveFollower(c *fiber.Ctx) error {
+	user, err := models.GetUser(c.Params("uuid"))
+	if err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "User not found."})
+	}
+
+	var follow models.Follow
+	result := database.DB.First(&follow, "follower_id = ? AND followed_id = ?", user.ID, utils.AuthId(c))
+	if result.RowsAffected == 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Follower not found."})
+	}
+
+	r := database.DB.Delete(&follow)
+	if r.Error != nil {
+		panic(r.Error)
+	}
+
+	return c.JSON(fiber.Map{"status": "success"})
 }
