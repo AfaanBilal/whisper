@@ -45,6 +45,7 @@ func main() {
 	auth := app.Group("/auth")
 	auth.Post("/sign-up", controllers.SignUp)
 	auth.Post("/sign-in", controllers.SignIn)
+	auth.Post("/sign-out", middleware.AuthProtected(), controllers.SignOut)
 
 	me := app.Group("/me", middleware.AuthProtected())
 	me.Get("/", controllers.GetProfile)

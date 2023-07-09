@@ -47,6 +47,7 @@ func authValidator(c *fiber.Ctx, key string) (bool, error) {
 		return false, keyauth.ErrMissingOrMalformedAPIKey
 	}
 
+	c.Locals("token_id", accessToken.ID)
 	c.Locals("user_id", accessToken.UserId)
 
 	return true, nil

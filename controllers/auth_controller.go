@@ -74,3 +74,19 @@ func SignIn(c *fiber.Ctx) error {
 
 	return utils.MakeAccessToken(c, &user)
 }
+
+func SignOut(c *fiber.Ctx) error {
+	var accessToken models.AccessToken
+
+	r := database.DB.First(&accessToken, "id = ?", c.Locals("token_id"))
+	if r.RowsAffected == 0 {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "Token not found."})
+	}
+
+	r = database.DB.Delete(&accessToken)
+	if r.Error != nil {
+		panic(r.Error)
+	}
+
+	return c.JSON(fiber.Map{"status": "success", "message": "Successfully signed out."})
+}
