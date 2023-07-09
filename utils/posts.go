@@ -54,11 +54,25 @@ func LikeCount(postId uint) int64 {
 	return count
 }
 
-func LikeCounts(postIds []uint) map[uint]int64 {
-	var like models.Like
-	var counts map[uint]int64
-	database.DB.Model(&like).Where("post_id IN ?", postIds).Select("post_id, COUNT(post_id) as count").Group("post_id").Find(&counts)
-	return counts
+type PostLikeCount struct {
+	PostId uint
+	Count  uint
+}
+
+func LikeCounts(postIds []uint) []PostLikeCount {
+	var postLikeCounts []PostLikeCount
+	database.DB.Raw("SELECT post_id, COUNT(post_id) as count FROM likes WHERE post_id IN ? GROUP BY post_id", postIds).Scan(&postLikeCounts)
+	return postLikeCounts
+}
+
+func PostLikes(postId uint, postLikeCounts []PostLikeCount) uint {
+	for _, like := range postLikeCounts {
+		if like.PostId == postId {
+			return like.Count
+		}
+	}
+
+	return 0
 }
 
 func LikedPosts(userId uint, postIds []uint) []models.Like {
@@ -124,7 +138,7 @@ func ProcessPostsResponse(c *fiber.Ctx, posts []models.Post) []PostResource {
 			Content:   post.Content,
 			Media:     post.Media,
 			CreatedAt: post.CreatedAt,
-			Likes:     uint(allLikes[post.ID]),
+			Likes:     PostLikes(post.ID, allLikes),
 			Liked:     HasLiked(AuthId(c), post.ID, likedPosts),
 		})
 	}
