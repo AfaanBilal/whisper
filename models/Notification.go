@@ -20,8 +20,9 @@ type Notification struct {
 	ID     uint `gorm:"primaryKey,autoIncrement"`
 	UserId uint `gorm:"index"`
 
-	TargetPostId uint `gorm:"index"`
-	TargetUserId uint `gorm:"index"`
+	TargetPostId   uint `gorm:"index"`
+	TargetUserId   uint `gorm:"index"`
+	TargetFollowId uint `gorm:"index"`
 
 	Type    string `gorm:"type:varchar(255); index"`
 	Message string `gorm:"type:varchar(255)"`
