@@ -22,16 +22,12 @@ import (
 )
 
 func GetProfile(c *fiber.Ctx) error {
-	var posts []models.Post
-	r := database.DB.Where("user_id = ?", utils.AuthId(c)).Limit(20).Find(&posts)
-	if r.Error != nil {
-		panic("Can't find posts")
-	}
-
+	posts := utils.UserPosts(utils.AuthId(c))
+	postCount := utils.PostCount(utils.AuthId(c))
 	followerCount := utils.FollowerCount(utils.AuthId(c))
 	followingCount := utils.FollowerCount(utils.AuthId(c))
 
-	return c.JSON(fiber.Map{"status": "success", "profile": utils.AuthUser(c), "posts": posts, "follower_count": followerCount, "following_count": followingCount})
+	return c.JSON(fiber.Map{"status": "success", "profile": utils.AuthUser(c), "posts": posts, "post_count": postCount, "follower_count": followerCount, "following_count": followingCount})
 }
 
 type ProfileDTO struct {
