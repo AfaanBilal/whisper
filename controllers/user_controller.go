@@ -27,13 +27,19 @@ func GetUserProfile(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "User not found."})
 	}
 
+	var follow models.Follow
+	result := database.DB.First(&follow, "followed_id = ? AND follower_id = ?", user.ID, utils.AuthId(c))
+	followed := result.RowsAffected > 0 && follow.AcceptedAt != time.Unix(0, 0)
+
 	var posts []models.Post
-	r := database.DB.Where("user_id = ?", user.ID).Order("id DESC").Limit(20).Find(&posts)
-	if r.Error != nil {
-		panic("Can't find posts")
+	if followed {
+		r := database.DB.Where("user_id = ?", user.ID).Order("id DESC").Limit(20).Find(&posts)
+		if r.Error != nil {
+			panic("Can't find posts")
+		}
 	}
 
-	return c.JSON(fiber.Map{"status": "success", "profile": user, "posts": posts})
+	return c.JSON(fiber.Map{"status": "success", "profile": user, "posts": posts, "followed": followed})
 }
 
 func GetUserFollowers(c *fiber.Ctx) error {
@@ -70,7 +76,12 @@ func FollowUser(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Already followed."})
 	}
 
-	follow = models.Follow{FollowedId: user.ID, FollowerId: utils.AuthId(c)}
+	var AcceptedAt time.Time = time.Now()
+	if user.IsPrivate {
+		AcceptedAt = time.Unix(0, 0)
+	}
+
+	follow = models.Follow{FollowedId: user.ID, FollowerId: utils.AuthId(c), AcceptedAt: AcceptedAt}
 	r := database.DB.Create(&follow)
 	if r.Error != nil {
 		panic(r.Error)
