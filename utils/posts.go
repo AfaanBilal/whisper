@@ -93,7 +93,7 @@ type PostResource struct {
 	Liked     bool           `json:"liked"`
 }
 
-func MakePostsResponse(c *fiber.Ctx, posts []models.Post) error {
+func ProcessPostsResponse(c *fiber.Ctx, posts []models.Post) []PostResource {
 	var post_ids []uint
 	var user_ids []uint
 	for _, post := range posts {
@@ -129,5 +129,9 @@ func MakePostsResponse(c *fiber.Ctx, posts []models.Post) error {
 		})
 	}
 
-	return c.JSON(fiber.Map{"status": "success", "posts": ps})
+	return ps
+}
+
+func MakePostsResponse(c *fiber.Ctx, posts []models.Post) error {
+	return c.JSON(fiber.Map{"status": "success", "posts": ProcessPostsResponse(c, posts)})
 }

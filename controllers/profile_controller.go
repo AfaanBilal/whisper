@@ -23,7 +23,7 @@ import (
 )
 
 func GetProfile(c *fiber.Ctx) error {
-	posts := utils.UserPosts(utils.AuthId(c))
+	posts := utils.ProcessPostsResponse(c, utils.UserPosts(utils.AuthId(c)))
 	postCount := utils.PostCount(utils.AuthId(c))
 	followerCount := utils.FollowerCount(utils.AuthId(c))
 	followingCount := utils.FollowerCount(utils.AuthId(c))
