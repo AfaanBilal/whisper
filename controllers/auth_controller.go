@@ -27,7 +27,7 @@ type SignUpDTO struct {
 	Password string    `json:"password" validate:"required,gte=8,lte=255"`
 	Name     string    `json:"name" validate:"required,lte=255"`
 	Username string    `json:"username" validate:"required,lte=255"`
-	Birthday time.Time `json:"birthday" validate:"required"`
+	Birthday time.Time `json:"birthday"`
 }
 
 type SignInDTO struct {
