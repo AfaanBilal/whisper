@@ -33,7 +33,7 @@ func Home(c *fiber.Ctx) error {
 func Explore(c *fiber.Ctx) error {
 	var posts []models.Post
 
-	r := database.DB.Where("user_id IN (SELECT id FROM users WHERE is_private = 0)").Order("id DESC").Limit(30).Find(&posts)
+	r := database.DB.Where("user_id NOT IN (SELECT id FROM users WHERE is_private = 1)").Order("id DESC").Limit(30).Find(&posts)
 	if r.Error != nil {
 		panic(r.Error)
 	}
