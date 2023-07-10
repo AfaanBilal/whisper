@@ -13,6 +13,7 @@ A micro-blogging platform.
 package controllers
 
 import (
+	"database/sql"
 	"time"
 
 	"github.com/AfaanBilal/whisper/database"
@@ -103,12 +104,11 @@ func FollowUser(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Already followed."})
 	}
 
-	var AcceptedAt time.Time = time.Now()
-	if user.IsPrivate {
-		AcceptedAt = time.Unix(0, 0)
+	follow = models.Follow{FollowedId: user.ID, FollowerId: utils.AuthId(c)}
+	if !user.IsPrivate {
+		follow.AcceptedAt = sql.NullTime{Time: time.Now(), Valid: true}
 	}
 
-	follow = models.Follow{FollowedId: user.ID, FollowerId: utils.AuthId(c), AcceptedAt: AcceptedAt}
 	r := database.DB.Create(&follow)
 	if r.Error != nil {
 		panic(r.Error)

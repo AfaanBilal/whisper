@@ -13,8 +13,6 @@ A micro-blogging platform.
 package utils
 
 import (
-	"time"
-
 	"github.com/AfaanBilal/whisper/database"
 	"github.com/AfaanBilal/whisper/models"
 )
@@ -22,7 +20,7 @@ import (
 func UserFollowers(userId uint) []models.User {
 	var follows []models.Follow
 
-	r := database.DB.Where("followed_id = ?", userId).Find(&follows)
+	r := database.DB.Where("followed_id = ? AND accepted_at IS NOT NULL", userId).Find(&follows)
 	if r.Error != nil {
 		panic("Can't find followers")
 	}
@@ -44,7 +42,7 @@ func UserFollowers(userId uint) []models.User {
 func UserFollowing(userId uint) []models.User {
 	var follows []models.Follow
 
-	r := database.DB.Where("follower_id = ?", userId).Find(&follows)
+	r := database.DB.Where("follower_id = ? AND accepted_at IS NOT NULL", userId).Find(&follows)
 	if r.Error != nil {
 		panic("Can't find following")
 	}
@@ -66,31 +64,31 @@ func UserFollowing(userId uint) []models.User {
 func FollowerCount(userId uint) int64 {
 	var follow models.Follow
 	var count int64
-	database.DB.Where("followed_id = ?", userId).Model(&follow).Count(&count)
+	database.DB.Where("followed_id = ? AND accepted_at IS NOT NULL", userId).Model(&follow).Count(&count)
 	return count
 }
 
 func FollowingCount(userId uint) int64 {
 	var follow models.Follow
 	var count int64
-	database.DB.Where("follower_id = ?", userId).Model(&follow).Count(&count)
+	database.DB.Where("follower_id = ? AND accepted_at IS NOT NULL", userId).Model(&follow).Count(&count)
 	return count
 }
 
 func IsFollowed(userId uint, by uint) bool {
 	var follow models.Follow
 	result := database.DB.First(&follow, "followed_id = ? AND follower_id = ?", userId, by)
-	return result.RowsAffected > 0 && follow.AcceptedAt != time.Unix(0, 0)
+	return result.RowsAffected > 0 && follow.AcceptedAt.Valid
 }
 
 func IsFollower(userId uint, by uint) bool {
 	var follow models.Follow
 	result := database.DB.First(&follow, "followed_id = ? AND follower_id = ?", by, userId)
-	return result.RowsAffected > 0 && follow.AcceptedAt != time.Unix(0, 0)
+	return result.RowsAffected > 0 && follow.AcceptedAt.Valid
 }
 
 func IsFollowRequested(userId uint, by uint) bool {
 	var follow models.Follow
 	result := database.DB.First(&follow, "followed_id = ? AND follower_id = ?", userId, by)
-	return result.RowsAffected > 0 && follow.AcceptedAt == time.Unix(0, 0)
+	return result.RowsAffected > 0 && !follow.AcceptedAt.Valid
 }

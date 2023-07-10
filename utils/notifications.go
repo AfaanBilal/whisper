@@ -31,7 +31,7 @@ type NotificationResource struct {
 
 func FindFollowId(follows []models.Follow, followId uint) uint {
 	for _, f := range follows {
-		if f.ID == followId && f.AcceptedAt == time.Unix(0, 0) {
+		if f.ID == followId && !f.AcceptedAt.Valid {
 			return f.ID
 		}
 	}
