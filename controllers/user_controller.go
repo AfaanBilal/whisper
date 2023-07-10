@@ -128,6 +128,26 @@ func FollowUser(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"status": "success", "followers": followers})
 }
 
+func CancelFollowRequest(c *fiber.Ctx) error {
+	user, err := models.GetUser(c.Params("uuid"))
+	if err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "User not found."})
+	}
+
+	var follow models.Follow
+	result := database.DB.First(&follow, "followed_id = ? AND follower_id = ?", user.ID, utils.AuthId(c))
+	if result.RowsAffected == 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Not requested."})
+	}
+
+	r := database.DB.Delete(&follow)
+	if r.Error != nil {
+		panic(r.Error)
+	}
+
+	return c.JSON(fiber.Map{"status": "success"})
+}
+
 func UnfollowUser(c *fiber.Ctx) error {
 	user, err := models.GetUser(c.Params("uuid"))
 	if err != nil {

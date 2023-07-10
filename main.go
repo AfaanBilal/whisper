@@ -62,6 +62,7 @@ func main() {
 	users.Get("/:uuid/followers", controllers.GetUserFollowers)
 	users.Get("/:uuid/following", controllers.GetUserFollowing)
 	users.Post("/:uuid/follow", controllers.FollowUser)
+	users.Post("/:uuid/follow/cancel", controllers.CancelFollowRequest)
 	users.Delete("/:uuid/follow", controllers.UnfollowUser)
 
 	posts := app.Group("/posts", middleware.AuthProtected())
