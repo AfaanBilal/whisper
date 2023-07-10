@@ -91,14 +91,6 @@ func HasLiked(userId uint, postId uint, likes []models.Like) bool {
 	return false
 }
 
-type UserResource struct {
-	UUID      string `json:"uuid"`
-	Name      string `json:"name"`
-	Username  string `json:"username"`
-	Image     string `json:"image"`
-	IsPrivate bool   `json:"is_private"`
-}
-
 type PostResource struct {
 	UUID      string       `json:"uuid"`
 	Author    UserResource `json:"author"`

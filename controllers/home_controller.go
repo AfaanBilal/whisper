@@ -40,3 +40,15 @@ func Explore(c *fiber.Ctx) error {
 
 	return utils.MakePostsResponse(c, posts)
 }
+
+func SearchUsers(c *fiber.Ctx) error {
+	search := "%" + c.Query("search") + "%"
+
+	var users []models.User
+	r := database.DB.Where("name LIKE ? OR username LIKE ?", search, search).Limit(20).Find(&users)
+	if r.Error != nil {
+		panic(r.Error)
+	}
+
+	return utils.MakeUsersResponse(c, users)
+}

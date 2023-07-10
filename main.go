@@ -41,6 +41,7 @@ func main() {
 
 	app.Get("/", middleware.AuthProtected(), controllers.Home)
 	app.Get("/explore", middleware.AuthProtected(), controllers.Explore)
+	app.Get("/search", middleware.AuthProtected(), controllers.SearchUsers)
 
 	auth := app.Group("/auth")
 	auth.Post("/sign-up", controllers.SignUp)
