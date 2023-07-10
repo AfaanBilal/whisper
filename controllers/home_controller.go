@@ -42,9 +42,14 @@ func Explore(c *fiber.Ctx) error {
 }
 
 func SearchUsers(c *fiber.Ctx) error {
-	search := "%" + c.Query("search") + "%"
+	search := c.Query("s", "")
+	search = "%" + search + "%"
 
 	var users []models.User
+	if search == "" {
+		return utils.MakeUsersResponse(c, users)
+	}
+
 	r := database.DB.Where("name LIKE ? OR username LIKE ?", search, search).Limit(20).Find(&users)
 	if r.Error != nil {
 		panic(r.Error)
