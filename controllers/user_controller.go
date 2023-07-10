@@ -121,7 +121,7 @@ func FollowUser(c *fiber.Ctx) error {
 		Message = "requested to follow you."
 	}
 
-	database.DB.Create(&models.Notification{UserId: user.ID, TargetUserId: utils.AuthId(c), Type: Type, Message: Message})
+	database.DB.Create(&models.Notification{UserId: user.ID, TargetUserId: utils.AuthId(c), TargetFollowId: follow.ID, Type: Type, Message: Message})
 
 	followers := utils.UserFollowers(user.ID)
 

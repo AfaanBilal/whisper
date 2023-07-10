@@ -24,14 +24,14 @@ type NotificationResource struct {
 	ID        uint         `json:"id"`
 	User      UserResource `json:"user"`
 	FollowId  uint         `json:"follow_id"`
-	Type      string       `json:"content"`
+	Type      string       `json:"type"`
 	Message   string       `json:"message"`
 	CreatedAt time.Time    `json:"created_at"`
 }
 
 func FindFollowId(follows []models.Follow, followId uint) uint {
 	for _, f := range follows {
-		if f.ID == followId {
+		if f.ID == followId && f.AcceptedAt == time.Unix(0, 0) {
 			return f.ID
 		}
 	}
