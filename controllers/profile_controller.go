@@ -71,7 +71,7 @@ func GetFollowing(c *fiber.Ctx) error {
 func GetNotifications(c *fiber.Ctx) error {
 	var notifications []models.Notification
 
-	r := database.DB.Where("user_id  = ?", utils.AuthId(c)).Find(&notifications)
+	r := database.DB.Where("user_id  = ?", utils.AuthId(c)).Order("id DESC").Limit(20).Find(&notifications)
 	if r.Error != nil {
 		panic("Can't find notifications")
 	}
