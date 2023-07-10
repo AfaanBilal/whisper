@@ -162,7 +162,7 @@ func AcceptFollower(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Follower not found."})
 	}
 
-	r := database.DB.Model(&follow).Update(follow.AcceptedAt.String(), time.Now())
+	r := database.DB.Model(&follow).Update("accepted_at", time.Now())
 	if r.Error != nil {
 		panic(r.Error)
 	}
