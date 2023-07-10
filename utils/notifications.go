@@ -44,7 +44,7 @@ func ProcessNotificationResponse(c *fiber.Ctx, notifications []models.Notificati
 	var user_ids []uint
 	var follow_ids []uint
 	for _, n := range notifications {
-		user_ids = append(user_ids, n.UserId)
+		user_ids = append(user_ids, n.TargetUserId)
 		notification_ids = append(notification_ids, n.ID)
 		follow_ids = append(follow_ids, n.TargetFollowId)
 	}
@@ -63,7 +63,7 @@ func ProcessNotificationResponse(c *fiber.Ctx, notifications []models.Notificati
 
 	var ns []NotificationResource
 	for _, n := range notifications {
-		user := FindUser(users, n.UserId)
+		user := FindUser(users, n.TargetUserId)
 
 		ns = append(ns, NotificationResource{
 			ID: n.ID,
