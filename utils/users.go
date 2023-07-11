@@ -14,21 +14,14 @@ package utils
 
 import (
 	"github.com/AfaanBilal/whisper/models"
+	"github.com/AfaanBilal/whisper/resources"
 	"github.com/gofiber/fiber/v2"
 )
 
-type UserResource struct {
-	UUID      string `json:"uuid"`
-	Name      string `json:"name"`
-	Username  string `json:"username"`
-	Image     string `json:"image"`
-	IsPrivate bool   `json:"is_private"`
-}
-
-func ProcessUsersResponse(c *fiber.Ctx, users []models.User) []UserResource {
-	var us []UserResource
+func ProcessUsersResponse(c *fiber.Ctx, users []models.User) []resources.UserResource {
+	var us []resources.UserResource
 	for _, u := range users {
-		us = append(us, UserResource{
+		us = append(us, resources.UserResource{
 			UUID:      u.UUID.String(),
 			Name:      u.Name,
 			Username:  u.Username,

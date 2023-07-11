@@ -18,6 +18,7 @@ import (
 
 	"github.com/AfaanBilal/whisper/database"
 	"github.com/AfaanBilal/whisper/models"
+	"github.com/AfaanBilal/whisper/resources"
 	"github.com/AfaanBilal/whisper/utils"
 	"github.com/gofiber/fiber/v2"
 )
@@ -53,7 +54,7 @@ func GetUserProfile(c *fiber.Ctx) error {
 	} else {
 		return c.JSON(fiber.Map{
 			"status": "success",
-			"profile": utils.UserResource{
+			"profile": resources.UserResource{
 				UUID:      user.UUID.String(),
 				Name:      user.Name,
 				Username:  user.Username,

@@ -13,23 +13,13 @@ A micro-blogging platform.
 package utils
 
 import (
-	"time"
-
 	"github.com/AfaanBilal/whisper/database"
 	"github.com/AfaanBilal/whisper/models"
+	"github.com/AfaanBilal/whisper/resources"
 	"github.com/gofiber/fiber/v2"
 )
 
-type NotificationResource struct {
-	ID        uint         `json:"id"`
-	User      UserResource `json:"user"`
-	FollowId  uint         `json:"follow_id"`
-	Type      string       `json:"type"`
-	Message   string       `json:"message"`
-	CreatedAt time.Time    `json:"created_at"`
-}
-
-func ProcessNotificationResponse(c *fiber.Ctx, notifications []models.Notification) []NotificationResource {
+func ProcessNotificationResponse(c *fiber.Ctx, notifications []models.Notification) []resources.NotificationResource {
 	var notification_ids []uint
 	var user_ids []uint
 	var follow_ids []uint
@@ -51,13 +41,13 @@ func ProcessNotificationResponse(c *fiber.Ctx, notifications []models.Notificati
 		panic(r.Error)
 	}
 
-	var ns []NotificationResource
+	var ns []resources.NotificationResource
 	for _, n := range notifications {
 		user := FindUser(users, n.TargetUserId)
 
-		ns = append(ns, NotificationResource{
+		ns = append(ns, resources.NotificationResource{
 			ID: n.ID,
-			User: UserResource{
+			User: resources.UserResource{
 				UUID:      user.UUID.String(),
 				Name:      user.Name,
 				Username:  user.Username,

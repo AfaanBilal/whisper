@@ -13,10 +13,9 @@ A micro-blogging platform.
 package utils
 
 import (
-	"time"
-
 	"github.com/AfaanBilal/whisper/database"
 	"github.com/AfaanBilal/whisper/models"
+	"github.com/AfaanBilal/whisper/resources"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -91,17 +90,7 @@ func HasLiked(userId uint, postId uint, likes []models.Like) bool {
 	return false
 }
 
-type PostResource struct {
-	UUID      string       `json:"uuid"`
-	Author    UserResource `json:"author"`
-	Content   string       `json:"content"`
-	Media     string       `json:"media"`
-	CreatedAt time.Time    `json:"created_at"`
-	Likes     uint         `json:"likes"`
-	Liked     bool         `json:"liked"`
-}
-
-func ProcessPostsResponse(c *fiber.Ctx, posts []models.Post) []PostResource {
+func ProcessPostsResponse(c *fiber.Ctx, posts []models.Post) []resources.PostResource {
 	var post_ids []uint
 	var user_ids []uint
 	for _, post := range posts {
@@ -118,13 +107,13 @@ func ProcessPostsResponse(c *fiber.Ctx, posts []models.Post) []PostResource {
 	allLikes := LikeCounts(post_ids)
 	likedPosts := LikedPosts(AuthId(c), post_ids)
 
-	var ps []PostResource
+	var ps []resources.PostResource
 	for _, post := range posts {
 		author := FindUser(authors, post.UserId)
 
-		ps = append(ps, PostResource{
+		ps = append(ps, resources.PostResource{
 			UUID: post.UUID.String(),
-			Author: UserResource{
+			Author: resources.UserResource{
 				UUID:      author.UUID.String(),
 				Name:      author.Name,
 				Username:  author.Username,
