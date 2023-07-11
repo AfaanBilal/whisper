@@ -13,9 +13,8 @@ A micro-blogging platform.
 package controllers
 
 import (
-	"time"
-
 	"github.com/AfaanBilal/whisper/database"
+	"github.com/AfaanBilal/whisper/dto"
 	"github.com/AfaanBilal/whisper/models"
 	"github.com/AfaanBilal/whisper/utils"
 	"github.com/go-playground/validator/v10"
@@ -31,17 +30,8 @@ func GetProfile(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"status": "success", "profile": utils.AuthUser(c), "posts": posts, "post_count": postCount, "follower_count": followerCount, "following_count": followingCount})
 }
 
-type ProfileDTO struct {
-	Name      string    `json:"name" validate:"lte=100"`
-	Birthday  time.Time `json:"birthday"`
-	Bio       string    `json:"bio" validate:"lte=240"`
-	Link      string    `json:"link"`
-	Image     string    `json:"image"`
-	IsPrivate *bool     `json:"is_private"`
-}
-
 func UpdateProfile(c *fiber.Ctx) error {
-	profileData := new(ProfileDTO)
+	profileData := new(dto.ProfileDTO)
 	if err := c.BodyParser(profileData); err != nil {
 		return err
 	}
