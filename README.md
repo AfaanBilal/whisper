@@ -10,13 +10,12 @@ Author: **[Afaan Bilal](https://afaan.dev)**
 
 ## Screenshots
 
-|        ![SignIn](/screenshots/1-SignIn.png)        |      ![SignUp](/screenshots/2-SignUp.png)       |
-| :------------------------------------------------: | :---------------------------------------------: |
-| ![ResetPassword](/screenshots/3-ResetPassword.png) |      ![Home](/screenshots/3.5-Welcome.png)      |
-|          ![Home](/screenshots/4-Home.png)          |     ![Compose](/screenshots/5-Compose.png)      |
-|       ![Explore](/screenshots/6-Explore.png)       | ![Compose](/screenshots/6.5-Notifications.png)  |
-| ![Notifications](/screenshots/7-Notifications.png) |     ![Profile](/screenshots/8-Profile.png)      |
-|          ![Menu](/screenshots/9-Menu.png)          | ![EditProfile](/screenshots/10-EditProfile.png) |
+|              ![SignIn](https://raw.githubusercontent.com/AfaanBilal/whisper-app/master/screenshots/SignIn.png)              |             ![SignUp](https://raw.githubusercontent.com/AfaanBilal/whisper-app/master/screenshots/SignUp.png)             |        ![Reset Password](https://raw.githubusercontent.com/AfaanBilal/whisper-app/master/screenshots/ResetPassword.png)         |
+| :-------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------: |
+|             ![Welcome](https://raw.githubusercontent.com/AfaanBilal/whisper-app/master/screenshots/Welcome.png)             |               ![Home](https://raw.githubusercontent.com/AfaanBilal/whisper-app/master/screenshots/Home.png)               |               ![Compose](https://raw.githubusercontent.com/AfaanBilal/whisper-app/master/screenshots/Compose.png)               |
+|             ![Explore](https://raw.githubusercontent.com/AfaanBilal/whisper-app/master/screenshots/Explore.png)             |     ![Explore Search](https://raw.githubusercontent.com/AfaanBilal/whisper-app/master/screenshots/Explore-Search.png)     |          ![User Profile](https://raw.githubusercontent.com/AfaanBilal/whisper-app/master/screenshots/UserProfile.png)           |
+| ![Notifications Empty](https://raw.githubusercontent.com/AfaanBilal/whisper-app/master/screenshots/Notifications-Empty.png) | ![Notifications List](https://raw.githubusercontent.com/AfaanBilal/whisper-app/master/screenshots/Notifications-List.png) | ![Notifications Request](https://raw.githubusercontent.com/AfaanBilal/whisper-app/master/screenshots/Notifications-Request.png) |
+|             ![Profile](https://raw.githubusercontent.com/AfaanBilal/whisper-app/master/screenshots/Profile.png)             |       ![Profile Menu](https://raw.githubusercontent.com/AfaanBilal/whisper-app/master/screenshots/Profile-Menu.png)       |          ![Edit Profile](https://raw.githubusercontent.com/AfaanBilal/whisper-app/master/screenshots/EditProfile.png)           |
 
 ---
 
