@@ -27,7 +27,14 @@ func GetProfile(c *fiber.Ctx) error {
 	followerCount := utils.FollowerCount(utils.AuthId(c))
 	followingCount := utils.FollowerCount(utils.AuthId(c))
 
-	return c.JSON(fiber.Map{"status": "success", "profile": utils.AuthUser(c), "posts": posts, "post_count": postCount, "follower_count": followerCount, "following_count": followingCount})
+	return c.JSON(fiber.Map{
+		"status":          "success",
+		"profile":         utils.ProcessProfileResponse(utils.AuthUser(c)),
+		"posts":           posts,
+		"post_count":      postCount,
+		"follower_count":  followerCount,
+		"following_count": followingCount,
+	})
 }
 
 func UpdateProfile(c *fiber.Ctx) error {
@@ -47,7 +54,7 @@ func UpdateProfile(c *fiber.Ctx) error {
 		panic(r.Error)
 	}
 
-	return c.JSON(fiber.Map{"status": "success", "profile": user})
+	return c.JSON(fiber.Map{"status": "success", "profile": utils.ProcessProfileResponse(user)})
 }
 
 func GetFollowers(c *fiber.Ctx) error {
