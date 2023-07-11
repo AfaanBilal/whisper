@@ -28,7 +28,7 @@ docker run --env DB_DSN="root:@tcp(host.docker.internal:3306)/whisper?charset=ut
 This will start the server on port 8080.
 
 ## API
-See [main.go](./main.go) for routing.
+See [routes.go](./routes/routes.go) for routing.
 
 ## Contributing
 All contributions are welcome. Please create an issue first for any feature request
