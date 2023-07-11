@@ -31,11 +31,6 @@ type Like struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-// Likes struct
-type Likes struct {
-	Likes []Like `json:"likes"`
-}
-
 func (like *Like) BeforeCreate(tx *gorm.DB) (err error) {
 	like.UUID = uuid.New()
 	return
