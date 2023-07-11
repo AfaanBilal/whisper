@@ -29,16 +29,6 @@ type NotificationResource struct {
 	CreatedAt time.Time    `json:"created_at"`
 }
 
-func FindFollowId(follows []models.Follow, followId uint) uint {
-	for _, f := range follows {
-		if f.ID == followId && !f.AcceptedAt.Valid {
-			return f.ID
-		}
-	}
-
-	return 0
-}
-
 func ProcessNotificationResponse(c *fiber.Ctx, notifications []models.Notification) []NotificationResource {
 	var notification_ids []uint
 	var user_ids []uint

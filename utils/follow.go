@@ -92,3 +92,13 @@ func IsFollowRequested(userId uint, by uint) bool {
 	result := database.DB.First(&follow, "followed_id = ? AND follower_id = ?", userId, by)
 	return result.RowsAffected > 0 && !follow.AcceptedAt.Valid
 }
+
+func FindFollowId(follows []models.Follow, followId uint) uint {
+	for _, f := range follows {
+		if f.ID == followId && !f.AcceptedAt.Valid {
+			return f.ID
+		}
+	}
+
+	return 0
+}
