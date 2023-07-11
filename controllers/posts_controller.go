@@ -14,6 +14,7 @@ package controllers
 
 import (
 	"github.com/AfaanBilal/whisper/database"
+	"github.com/AfaanBilal/whisper/dto"
 	"github.com/AfaanBilal/whisper/models"
 	"github.com/AfaanBilal/whisper/utils"
 	"github.com/go-playground/validator/v10"
@@ -31,13 +32,8 @@ func GetPosts(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"status": "success", "posts": posts})
 }
 
-type PostDTO struct {
-	Content string `json:"content"`
-	Media   string `json:"media"`
-}
-
 func CreatePost(c *fiber.Ctx) error {
-	postData := new(PostDTO)
+	postData := new(dto.PostDTO)
 	if err := c.BodyParser(postData); err != nil {
 		return err
 	}
@@ -57,7 +53,7 @@ func CreatePost(c *fiber.Ctx) error {
 }
 
 func UpdatePost(c *fiber.Ctx) error {
-	postData := new(PostDTO)
+	postData := new(dto.PostDTO)
 	if err := c.BodyParser(postData); err != nil {
 		return err
 	}
