@@ -30,16 +30,16 @@ type User struct {
 	Email    string `gorm:"type:varchar(255); uniqueIndex" json:"email"`
 	Password string `gorm:"type:varchar(255)" json:"-"`
 
-	Image    string    `json:"image"`
-	Birthday time.Time `json:"birthday"`
-	Bio      string    `json:"bio"`
-	Link     string    `json:"link"`
+	Image    string       `json:"image"`
+	Birthday sql.NullTime `json:"birthday"`
+	Bio      string       `json:"bio"`
+	Link     string       `json:"link"`
 
 	IsPrivate bool   `gorm:"index" json:"is_private"`
 	Role      string `gorm:"type:varchar(50); default:user"`
 
-	ActivatedAt sql.NullTime `json:"-"`
-	VerifiedAt  sql.NullTime `json:"-"`
+	ActivatedAt sql.NullTime `gorm:"index" json:"-"`
+	VerifiedAt  sql.NullTime `gorm:"index" json:"-"`
 
 	Meta      string    `json:"-"`
 	CreatedAt time.Time `json:"created_at"`

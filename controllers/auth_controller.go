@@ -13,30 +13,16 @@ A micro-blogging platform.
 package controllers
 
 import (
-	"time"
-
 	"github.com/AfaanBilal/whisper/database"
+	"github.com/AfaanBilal/whisper/dto"
 	"github.com/AfaanBilal/whisper/models"
 	"github.com/AfaanBilal/whisper/utils"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
 
-type SignUpDTO struct {
-	Email    string    `json:"email" validate:"required,email,lte=255"`
-	Password string    `json:"password" validate:"required,gte=8,lte=255"`
-	Name     string    `json:"name" validate:"required,lte=255"`
-	Username string    `json:"username" validate:"required,lte=255"`
-	Birthday time.Time `json:"birthday"`
-}
-
-type SignInDTO struct {
-	Email    string `json:"email" validate:"required,email,lte=255"`
-	Password string `json:"password" validate:"required,lte=255"`
-}
-
 func SignUp(c *fiber.Ctx) error {
-	signUp := new(SignUpDTO)
+	signUp := new(dto.SignUpDTO)
 	if err := c.BodyParser(signUp); err != nil {
 		return err
 	}
@@ -58,7 +44,8 @@ func SignUp(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "An account exists with this email."})
 	}
 
-	user := models.User{Email: signUp.Email, Password: utils.HashMake(signUp.Password), Name: signUp.Name, Username: signUp.Username, Birthday: signUp.Birthday}
+	user := models.User{Email: signUp.Email, Password: utils.HashMake(signUp.Password), Name: signUp.Name, Username: signUp.Username}
+
 	r := database.DB.Create(&user)
 	if r.Error != nil {
 		panic(r.Error)
@@ -68,7 +55,7 @@ func SignUp(c *fiber.Ctx) error {
 }
 
 func SignIn(c *fiber.Ctx) error {
-	signIn := new(SignInDTO)
+	signIn := new(dto.SignInDTO)
 	if err := c.BodyParser(signIn); err != nil {
 		return err
 	}
