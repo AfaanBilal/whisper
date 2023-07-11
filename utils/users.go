@@ -13,10 +13,22 @@ A micro-blogging platform.
 package utils
 
 import (
+	"github.com/AfaanBilal/whisper/database"
 	"github.com/AfaanBilal/whisper/models"
 	"github.com/AfaanBilal/whisper/resources"
 	"github.com/gofiber/fiber/v2"
 )
+
+func GetUser(uuid string) (models.User, error) {
+	var user models.User
+
+	result := database.DB.First(&user, "uuid = ?", uuid)
+	if result.RowsAffected == 0 {
+		return user, result.Error
+	}
+
+	return user, nil
+}
 
 func ProcessUsersResponse(c *fiber.Ctx, users []models.User) []resources.UserResource {
 	var us []resources.UserResource

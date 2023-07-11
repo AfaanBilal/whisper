@@ -24,7 +24,7 @@ import (
 )
 
 func GetUserProfile(c *fiber.Ctx) error {
-	user, err := models.GetUser(c.Params("uuid"))
+	user, err := utils.GetUser(c.Params("uuid"))
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "User not found."})
 	}
@@ -72,7 +72,7 @@ func GetUserProfile(c *fiber.Ctx) error {
 }
 
 func GetUserFollowers(c *fiber.Ctx) error {
-	user, err := models.GetUser(c.Params("uuid"))
+	user, err := utils.GetUser(c.Params("uuid"))
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "User not found."})
 	}
@@ -83,7 +83,7 @@ func GetUserFollowers(c *fiber.Ctx) error {
 }
 
 func GetUserFollowing(c *fiber.Ctx) error {
-	user, err := models.GetUser(c.Params("uuid"))
+	user, err := utils.GetUser(c.Params("uuid"))
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "User not found."})
 	}
@@ -94,7 +94,7 @@ func GetUserFollowing(c *fiber.Ctx) error {
 }
 
 func FollowUser(c *fiber.Ctx) error {
-	user, err := models.GetUser(c.Params("uuid"))
+	user, err := utils.GetUser(c.Params("uuid"))
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "User not found."})
 	}
@@ -130,7 +130,7 @@ func FollowUser(c *fiber.Ctx) error {
 }
 
 func CancelFollowRequest(c *fiber.Ctx) error {
-	user, err := models.GetUser(c.Params("uuid"))
+	user, err := utils.GetUser(c.Params("uuid"))
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "User not found."})
 	}
@@ -150,7 +150,7 @@ func CancelFollowRequest(c *fiber.Ctx) error {
 }
 
 func UnfollowUser(c *fiber.Ctx) error {
-	user, err := models.GetUser(c.Params("uuid"))
+	user, err := utils.GetUser(c.Params("uuid"))
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "User not found."})
 	}
@@ -172,7 +172,7 @@ func UnfollowUser(c *fiber.Ctx) error {
 }
 
 func AcceptFollower(c *fiber.Ctx) error {
-	user, err := models.GetUser(c.Params("uuid"))
+	user, err := utils.GetUser(c.Params("uuid"))
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "User not found."})
 	}
@@ -194,7 +194,7 @@ func AcceptFollower(c *fiber.Ctx) error {
 }
 
 func RejectFollower(c *fiber.Ctx) error {
-	user, err := models.GetUser(c.Params("uuid"))
+	user, err := utils.GetUser(c.Params("uuid"))
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "User not found."})
 	}
@@ -214,7 +214,7 @@ func RejectFollower(c *fiber.Ctx) error {
 }
 
 func RemoveFollower(c *fiber.Ctx) error {
-	user, err := models.GetUser(c.Params("uuid"))
+	user, err := utils.GetUser(c.Params("uuid"))
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "User not found."})
 	}

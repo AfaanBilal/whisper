@@ -17,7 +17,6 @@ import (
 	"os"
 
 	"github.com/AfaanBilal/whisper/database"
-	"github.com/AfaanBilal/whisper/models"
 	"github.com/AfaanBilal/whisper/routes"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -28,7 +27,7 @@ func main() {
 	godotenv.Load()
 
 	database.Connect()
-	database.DB.AutoMigrate(&models.User{}, &models.AccessToken{}, &models.Follow{}, &models.Post{}, &models.Like{}, &models.Notification{})
+	database.RunMigrations()
 
 	app := fiber.New(fiber.Config{
 		ServerHeader:          "Whisper",

@@ -16,7 +16,6 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/AfaanBilal/whisper/database"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
@@ -49,15 +48,4 @@ type User struct {
 func (user *User) BeforeCreate(tx *gorm.DB) (err error) {
 	user.UUID = uuid.New()
 	return
-}
-
-func GetUser(uuid string) (User, error) {
-	var user User
-
-	result := database.DB.First(&user, "uuid = ?", uuid)
-	if result.RowsAffected == 0 {
-		return user, result.Error
-	}
-
-	return user, nil
 }

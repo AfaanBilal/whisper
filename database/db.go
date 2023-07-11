@@ -15,6 +15,7 @@ package database
 import (
 	"os"
 
+	"github.com/AfaanBilal/whisper/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -30,4 +31,15 @@ func Connect() {
 	}
 
 	DB = db
+}
+
+func RunMigrations() {
+	DB.AutoMigrate(
+		&models.User{},
+		&models.AccessToken{},
+		&models.Follow{},
+		&models.Post{},
+		&models.Like{},
+		&models.Notification{},
+	)
 }
