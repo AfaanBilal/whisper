@@ -13,6 +13,7 @@ A micro-blogging platform.
 package middleware
 
 import (
+	"errors"
 	"strings"
 
 	"github.com/AfaanBilal/whisper/database"
@@ -21,6 +22,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/keyauth"
 )
+
+var ErrInvalidToken = errors.New("Invalid access token.")
 
 func AuthProtected() func(*fiber.Ctx) error {
 	config := keyauth.Config{
@@ -35,7 +38,7 @@ func authValidator(c *fiber.Ctx, key string) (bool, error) {
 	keyParts := strings.Split(key, "|")
 
 	if len(keyParts) < 2 {
-		return false, keyauth.ErrMissingOrMalformedAPIKey
+		return false, ErrInvalidToken
 	}
 
 	accessTokenId := keyParts[0]
@@ -45,11 +48,11 @@ func authValidator(c *fiber.Ctx, key string) (bool, error) {
 	result := database.DB.First(&accessToken, "id = ?", accessTokenId)
 
 	if result.RowsAffected == 0 {
-		return false, keyauth.ErrMissingOrMalformedAPIKey
+		return false, ErrInvalidToken
 	}
 
 	if !utils.HashCheck(accessTokenValue, accessToken.Token) {
-		return false, keyauth.ErrMissingOrMalformedAPIKey
+		return false, ErrInvalidToken
 	}
 
 	c.Locals("token_id", accessToken.ID)
@@ -59,15 +62,8 @@ func authValidator(c *fiber.Ctx, key string) (bool, error) {
 }
 
 func authError(c *fiber.Ctx, err error) error {
-	if err.Error() == keyauth.ErrMissingOrMalformedAPIKey.Error() {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": true,
-			"msg":   err.Error(),
-		})
-	}
-
 	return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-		"error": true,
-		"msg":   err.Error(),
+		"status":  "error",
+		"message": err.Error(),
 	})
 }
