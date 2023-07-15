@@ -130,7 +130,7 @@ func RequestResetPassword(c *fiber.Ctx) error {
 		panic(r.Error)
 	}
 
-	// Send email
+	utils.SendPasswordResetCode(user.Email, user.Name, vc.Code)
 
 	return c.JSON(fiber.Map{"status": "success", "message": "A verification code has been sent to your email.", "uuid": vc.UUID})
 }
