@@ -121,7 +121,13 @@ func RequestResetPassword(c *fiber.Ctx) error {
 		Code:      utils.MakeCode(),
 		Token:     utils.MakeToken(),
 		Purpose:   models.Purpose_PasswordReset,
+		Attempts:  3,
 		ExpiresAt: time.Now().Add(time.Minute * 15),
+	}
+
+	r := database.DB.Create(&vc)
+	if r.Error != nil {
+		panic(r.Error)
 	}
 
 	// Send email
@@ -156,13 +162,13 @@ func VerifyCode(c *fiber.Ctx) error {
 
 	if vc.Code != verifyCode.Code {
 		vc.Attempts -= 1
-		database.DB.Model(&vc).Update("attempts", vc.Attempts-1)
+		database.DB.Updates(&vc)
 
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Invalid code. Attempts remaining: " + fmt.Sprintf("%d", vc.Attempts)})
 	}
 
 	vc.Attempts = 0
-	database.DB.Model(&vc).Update("attempts", 0)
+	database.DB.Updates(&vc)
 
 	return c.JSON(fiber.Map{"status": "success", "uuid": vc.UUID, "token": vc.Token})
 }
@@ -200,5 +206,5 @@ func ResetPassword(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Something went wrong. Please try again. E_PW_UPDATE_FAILED."})
 	}
 
-	return c.JSON(fiber.Map{"status": "success", "message": "Password reset complete. Please sign in using your new password."})
+	return c.JSON(fiber.Map{"status": "success", "message": "Password reset complete."})
 }
