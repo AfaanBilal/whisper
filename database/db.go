@@ -41,5 +41,6 @@ func RunMigrations() {
 		&models.Post{},
 		&models.Like{},
 		&models.Notification{},
+		&models.VerificationCode{},
 	)
 }
