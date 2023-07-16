@@ -26,7 +26,7 @@ func SendPasswordResetCode(email string, name string, code string) {
 	params := &resend.SendEmailRequest{
 		From:    "Whisper <accounts@whisper.amx.gg>",
 		To:      []string{email},
-		Html:    fmt.Sprintf("Hi %s,<br /><br />Here's your code to reset your password: %s<br /><br />You can ignore this message if you didn't request to reset your password.<br /><br />Team Whisper", name, code),
+		Html:    fmt.Sprintf("Hi %s,<br /><br />Here's your code to reset your password: <b>%s</b><br /><br />You can ignore this message if you didn't request to reset your password.<br /><br />Team Whisper", name, code),
 		Subject: "Whisper: Reset Password",
 		ReplyTo: "whisper@afaan.dev",
 	}
