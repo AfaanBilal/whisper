@@ -27,7 +27,7 @@ func GetPosts(c *fiber.Ctx) error {
 		panic("Can't find posts")
 	}
 
-	return c.JSON(fiber.Map{"status": "success", "posts": posts})
+	return c.JSON(fiber.Map{"status": "success", "posts": utils.ProcessPostsResponse(c, posts)})
 }
 
 func DeletePost(c *fiber.Ctx) error {
