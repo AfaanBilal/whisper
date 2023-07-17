@@ -13,8 +13,6 @@ A micro-blogging platform.
 package middleware
 
 import (
-	"errors"
-
 	"github.com/AfaanBilal/whisper/utils"
 	"github.com/gofiber/fiber/v2"
 )
@@ -23,7 +21,7 @@ func AdminOnly() func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		user := utils.AuthUser(c)
 		if user.Role != "admin" {
-			return errors.New("Unauthorized")
+			return c.SendStatus(fiber.StatusForbidden)
 		}
 
 		return c.Next()
