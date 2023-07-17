@@ -24,7 +24,7 @@ import (
 func GetPosts(c *fiber.Ctx) error {
 	var posts []models.Post
 
-	r := database.DB.Where("user_id =?", utils.AuthId(c)).Find(&posts)
+	r := database.DB.Where("user_id =?", utils.AuthId(c)).Order("id DESC").Limit(30).Find(&posts)
 	if r.Error != nil {
 		panic("Can't find posts")
 	}
