@@ -14,6 +14,7 @@ package routes
 
 import (
 	"github.com/AfaanBilal/whisper/controllers"
+	"github.com/AfaanBilal/whisper/controllers/admin"
 	"github.com/AfaanBilal/whisper/middleware"
 	"github.com/gofiber/fiber/v2"
 )
@@ -58,4 +59,15 @@ func Setup(app *fiber.App) {
 	posts.Get("/:uuid/likes", controllers.GetLikes)
 	posts.Post("/:uuid/likes", controllers.LikePost)
 	posts.Delete("/:uuid/likes", controllers.UnlikePost)
+
+	admin_routes := app.Group("/admin", middleware.AuthProtected(), middleware.AdminOnly())
+	admin_routes.Get("/", admin.GetDashboard)
+
+	admin_posts := admin_routes.Group("/posts")
+	admin_posts.Get("/", admin.GetPosts)
+	admin_posts.Delete("/:uuid", admin.DeletePost)
+
+	admin_users := admin_routes.Group("/users")
+	admin_users.Get("/", admin.GetUsers)
+	admin_users.Delete("/:uuid", admin.DeleteUser)
 }
