@@ -37,8 +37,8 @@ type User struct {
 	IsPrivate bool   `gorm:"index" json:"is_private"`
 	Role      string `gorm:"type:varchar(50); default:user"`
 
-	ActivatedAt sql.NullTime `gorm:"index" json:"-"`
-	VerifiedAt  sql.NullTime `gorm:"index" json:"-"`
+	ActivatedAt sql.NullTime `gorm:"index" json:"activated_at"`
+	VerifiedAt  sql.NullTime `gorm:"index" json:"verified_at"`
 
 	Meta      string    `json:"-"`
 	CreatedAt time.Time `json:"created_at"`
