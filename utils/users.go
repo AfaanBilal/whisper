@@ -48,3 +48,10 @@ func ProcessUsersResponse(c *fiber.Ctx, users []models.User) []resources.UserRes
 func MakeUsersResponse(c *fiber.Ctx, users []models.User) error {
 	return c.JSON(fiber.Map{"status": "success", "users": ProcessUsersResponse(c, users)})
 }
+
+func TotalUserCount() int64 {
+	var user models.User
+	var count int64
+	database.DB.Model(&user).Count(&count)
+	return count
+}

@@ -134,3 +134,10 @@ func ProcessPostsResponse(c *fiber.Ctx, posts []models.Post) []resources.PostRes
 func MakePostsResponse(c *fiber.Ctx, posts []models.Post) error {
 	return c.JSON(fiber.Map{"status": "success", "posts": ProcessPostsResponse(c, posts)})
 }
+
+func TotalPostCount() int64 {
+	var post models.Post
+	var count int64
+	database.DB.Model(&post).Count(&count)
+	return count
+}

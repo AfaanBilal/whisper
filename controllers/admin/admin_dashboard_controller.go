@@ -13,9 +13,14 @@ A micro-blogging platform.
 package admin
 
 import (
+	"github.com/AfaanBilal/whisper/utils"
 	"github.com/gofiber/fiber/v2"
 )
 
 func GetDashboard(c *fiber.Ctx) error {
-	return c.JSON(fiber.Map{"status": "success"})
+	return c.JSON(fiber.Map{
+		"status":      "success",
+		"total_users": utils.TotalUserCount(),
+		"total_posts": utils.TotalPostCount(),
+	})
 }
