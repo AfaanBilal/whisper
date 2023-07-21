@@ -17,22 +17,16 @@ import (
 	"time"
 
 	"github.com/AfaanBilal/whisper/database"
-	"github.com/AfaanBilal/whisper/dto"
 	"github.com/AfaanBilal/whisper/models"
 	"github.com/AfaanBilal/whisper/utils"
-	"github.com/go-playground/validator/v10"
+	"github.com/AfaanBilal/whisper/validation"
 	"github.com/gofiber/fiber/v2"
 )
 
 func SignUp(c *fiber.Ctx) error {
-	signUp := new(dto.SignUpDTO)
-	if err := c.BodyParser(signUp); err != nil {
+	signUp, err := validation.ValidateSignUp(c)
+	if err != nil {
 		return err
-	}
-
-	validate := validator.New()
-	if err := validate.Struct(signUp); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": utils.ValidatorErrors(err)})
 	}
 
 	var u models.User
@@ -58,14 +52,9 @@ func SignUp(c *fiber.Ctx) error {
 }
 
 func SignIn(c *fiber.Ctx) error {
-	signIn := new(dto.SignInDTO)
-	if err := c.BodyParser(signIn); err != nil {
+	signIn, err := validation.ValidateSignIn(c)
+	if err != nil {
 		return err
-	}
-
-	validate := validator.New()
-	if err := validate.Struct(signIn); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": utils.ValidatorErrors(err)})
 	}
 
 	var user models.User
@@ -99,14 +88,9 @@ func SignOut(c *fiber.Ctx) error {
 }
 
 func RequestResetPassword(c *fiber.Ctx) error {
-	resetPassword := new(dto.RequestResetPasswordDTO)
-	if err := c.BodyParser(resetPassword); err != nil {
+	resetPassword, err := validation.ValidateRequestResetPassword(c)
+	if err != nil {
 		return err
-	}
-
-	validate := validator.New()
-	if err := validate.Struct(resetPassword); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": utils.ValidatorErrors(err)})
 	}
 
 	var user models.User
@@ -136,14 +120,9 @@ func RequestResetPassword(c *fiber.Ctx) error {
 }
 
 func VerifyCode(c *fiber.Ctx) error {
-	verifyCode := new(dto.VerifyCodeDTO)
-	if err := c.BodyParser(verifyCode); err != nil {
+	verifyCode, err := validation.ValidateVerifyCode(c)
+	if err != nil {
 		return err
-	}
-
-	validate := validator.New()
-	if err := validate.Struct(verifyCode); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": utils.ValidatorErrors(err)})
 	}
 
 	var vc models.VerificationCode
@@ -174,14 +153,9 @@ func VerifyCode(c *fiber.Ctx) error {
 }
 
 func ResetPassword(c *fiber.Ctx) error {
-	resetPassword := new(dto.ResetPasswordDTO)
-	if err := c.BodyParser(resetPassword); err != nil {
+	resetPassword, err := validation.ValidateResetPassword(c)
+	if err != nil {
 		return err
-	}
-
-	validate := validator.New()
-	if err := validate.Struct(resetPassword); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": utils.ValidatorErrors(err)})
 	}
 
 	var vc models.VerificationCode

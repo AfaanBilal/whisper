@@ -10,7 +10,7 @@ A micro-blogging platform.
 
 */
 
-package utils
+package validation
 
 import (
 	"fmt"
