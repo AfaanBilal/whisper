@@ -14,11 +14,9 @@ package controllers
 
 import (
 	"github.com/AfaanBilal/whisper/database"
-	"github.com/AfaanBilal/whisper/dto"
 	"github.com/AfaanBilal/whisper/models"
 	"github.com/AfaanBilal/whisper/utils"
 	"github.com/AfaanBilal/whisper/validation"
-	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -39,14 +37,9 @@ func GetProfile(c *fiber.Ctx) error {
 }
 
 func UpdateProfile(c *fiber.Ctx) error {
-	profileData := new(dto.ProfileDTO)
-	if err := c.BodyParser(profileData); err != nil {
+	profileData, err := validation.ValidateProfile(c)
+	if err != nil {
 		return err
-	}
-
-	validate := validator.New()
-	if err := validate.Struct(profileData); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": validation.ValidatorErrors(err)})
 	}
 
 	user := utils.AuthUser(c)
