@@ -22,7 +22,10 @@ import (
 func Home(c *fiber.Ctx) error {
 	var posts []models.Post
 
-	r := database.DB.Where("user_id IN (SELECT followed_id FROM follows WHERE follower_id = ? AND accepted_at IS NOT NULL)", utils.AuthId(c)).Or("user_id = ?", utils.AuthId(c)).Order("id DESC").Limit(30).Find(&posts)
+	r := database.DB.Where(
+		"user_id IN (SELECT followed_id FROM follows WHERE follower_id = ? AND accepted_at IS NOT NULL)",
+		utils.AuthId(c),
+	).Or("user_id = ?", utils.AuthId(c)).Order("id DESC").Offset(utils.GetOffset(c)).Limit(utils.ItemsPerPage).Find(&posts)
 	if r.Error != nil {
 		panic(r.Error)
 	}
@@ -33,7 +36,9 @@ func Home(c *fiber.Ctx) error {
 func Explore(c *fiber.Ctx) error {
 	var posts []models.Post
 
-	r := database.DB.Where("user_id NOT IN (SELECT id FROM users WHERE is_private = 1)").Order("id DESC").Limit(30).Find(&posts)
+	r := database.DB.Where(
+		"user_id NOT IN (SELECT id FROM users WHERE is_private = 1)",
+	).Order("id DESC").Offset(utils.GetOffset(c)).Limit(utils.ItemsPerPage).Find(&posts)
 	if r.Error != nil {
 		panic(r.Error)
 	}
