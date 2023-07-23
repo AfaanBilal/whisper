@@ -13,6 +13,6 @@ A micro-blogging platform.
 package dto
 
 type PostDTO struct {
-	Content string `json:"content"`
+	Content string `json:"content" validate:"lte=233"`
 	Media   string `json:"media"`
 }
