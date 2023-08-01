@@ -12,7 +12,7 @@
 # Stage 1 (Build)
 #
 
-FROM golang:1.20-alpine3.17 AS build
+FROM golang:1.20-alpine3.18 AS build
 
 WORKDIR /home/go/app
 
@@ -26,7 +26,7 @@ RUN go build -o main .
 # Stage 2 (Run)
 #
 
-FROM alpine:3.17
+FROM alpine:3.18
 
 WORKDIR /home/go/app
 
